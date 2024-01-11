@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: web-temps-reel
+  labels:
+    app: vue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vue
+  template:
+    metadata:
+      labels:
+        app: vue
+    spec:
+      containers:
+      - name: front
+        image: gatien1/web-temps-reel-frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: web-temps-reel
+spec:
+  selector:
+    app: vue
+  ports:
+  - protocol: TCP
+    port : 8180
+    targetPort: 8080
