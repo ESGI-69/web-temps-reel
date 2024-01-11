@@ -6,10 +6,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - quiz.bliblablou.day
-    secretName: quiz-bliblablou-tls
+    - quizz.bliblablou.day
+    secretName: quizz-bliblablou-tls
   rules:
-  - host: quiz.bliblablou.day
+  - host: quizz.bliblablou.day
     http:
       paths:
       - path: /
