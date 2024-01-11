@@ -10,7 +10,7 @@ on:
       - 'kubernetes/frontend-deploy-and-service.yaml'
 
 env:
-  DOCKERHUB_REPO_FRONTEND: ${{ vars.DOCKERHUB_USERNAME }}/marmiton-frontend
+  DOCKERHUB_REPO_FRONTEND: ${{ vars.DOCKERHUB_USERNAME }}/web-temps-reel-frontend
 
 jobs:
   publish_frontend:
@@ -54,5 +54,5 @@ jobs:
           echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
       - name: Redeploy
         run: |
-          kubectl set image deployment/frontend-deployment front=${{ env.DOCKERHUB_REPO_FRONTEND }}:${{ github.sha }} -n marmiton
-          kubectl rollout status deployment/frontend-deployment -n marmiton
+          kubectl set image deployment/frontend-deployment front=${{ env.DOCKERHUB_REPO_FRONTEND }}:${{ github.sha }} -n web-temps-reel
+          kubectl rollout status deployment/frontend-deployment -n web-temps-reel
