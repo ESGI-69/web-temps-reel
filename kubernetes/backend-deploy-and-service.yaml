@@ -16,7 +16,7 @@ spec:
         app: node
     spec:
       containers:
-      - name: front
+      - name: backend
         image: gatien1/web-temps-reel-backend:latest
         imagePullPolicy: Always
         ports:
