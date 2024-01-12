@@ -36,6 +36,8 @@ app.listen(3000, () => {
   console.log('Listening on port 3000');
   // eslint-disable-next-line no-console
   console.log(`Posgress database URL: ${process.env.POSGRESS_DATABASE_SERVICE_SERVICE_HOST || 'localhost'}:${process.env.POSGRESS_DATABASE_SERVICE_SERVICE_PORT || 5432}`);
+  // eslint-disable-next-line no-console
+  console.log(`Mongo database URL: ${process.env.MONGO_DATABASE_SERVICE_SERVICE_HOST || 'localhost'}:${process.env.MONGO_DATABASE_SERVICE_SERVICE_PORT || 27017}`);
 });
 
 export { io };

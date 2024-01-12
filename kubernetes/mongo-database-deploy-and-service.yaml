@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-database-deployment
+  namespace: web-temps-reel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-database
+  template:
+    metadata:
+      labels:
+        app: mongo-database
+    spec:
+      containers:
+        - name: mongo-database
+          image: mongo:latest
+          ports:
+          - containerPort: 27017
+          volumeMounts:
+          - name: mongo-database-data
+            mountPath: /data/db
+          envFrom:
+          - secretRef:
+              name: database-secrets
+      volumes:
+      - name: mongo-database-data
+        hostPath:
+          path: /home/ubuntu/app/mongo-data-web-temps-reel
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-database-service
+  namespace: web-temps-reel
+spec:
+  selector:
+    app: mongo-database
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
