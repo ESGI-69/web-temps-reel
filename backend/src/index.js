@@ -41,7 +41,7 @@ Promise.all([
     // eslint-disable-next-line no-console
     console.log('Listening on port 3000');
     // eslint-disable-next-line no-console
-    console.log(`Posgress database connected: ${process.env.POSGRESS_DATABASE_SERVICE_SERVICE_HOST || 'localhost'}:${process.env.POSGRESS_DATABASE_SERVICE_SERVICE_PORT || 5432}/${process.env.POSTGRES_DB}`);
+    console.log(`Posgres database connected: ${process.env.POSGRES_DATABASE_SERVICE_SERVICE_HOST || 'localhost'}:${process.env.POSGRES_DATABASE_SERVICE_SERVICE_PORT || 5432}/${process.env.POSTGRES_DB}`);
     // eslint-disable-next-line no-console
     console.log(`Mongo database connected: ${process.env.MONGO_DATABASE_SERVICE_SERVICE_HOST || 'localhost'}:${process.env.MONGO_DATABASE_SERVICE_SERVICE_PORT || 27017}/${process.env.MONGO_DB}`);
   });

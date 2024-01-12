@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const mongoDomainName = process.env.MONGO_DATABASE_SERVICE_SERVICE_HOST || 'localhost';
-const postgresDomainName = process.env.POSGRESS_DATABASE_SERVICE_SERVICE_HOST || 'localhost';
+const postgresDomainName = process.env.POSGRES_DATABASE_SERVICE_SERVICE_HOST || 'localhost';
 
 // eslint-disable-next-line no-console
 console.log(`Connecting to postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${postgresDomainName}:5432/${process.env.POSTGRES_DB}`);

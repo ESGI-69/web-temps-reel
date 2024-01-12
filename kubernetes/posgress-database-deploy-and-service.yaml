@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: posgress-database-deployment
+  name: posgres-database-deployment
   namespace: web-temps-reel
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: posgress-database
+      app: posgres-database
   template:
     metadata:
       labels:
-        app: posgress-database
+        app: posgres-database
     spec:
       containers:
-        - name: posgress-database
+        - name: posgres-database
           image: postgres:15.4-alpine
           ports:
           - containerPort: 5432
           volumeMounts:
-          - name: posgress-database-data
+          - name: posgres-database-data
             mountPath: /var/lib/postgresql/data
           envFrom:
           - secretRef:
               name: database-secrets
       volumes:
-      - name: posgress-database-data
+      - name: posgres-database-data
         hostPath:
           path: /home/ubuntu/app/pg-data-web-temps-reel
 
@@ -34,11 +34,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: posgress-database-service
+  name: posgres-database-service
   namespace: web-temps-reel
 spec:
   selector:
-    app: posgress-database
+    app: posgres-database
   ports:
     - protocol: TCP
       port: 5432
