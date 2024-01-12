@@ -15,8 +15,8 @@ let mongo;
 
 const connectMongo = async () => {
   // eslint-disable-next-line no-console
-  console.log(`Connecting to mongodb://${process.env.MONGO_ROOT_USER}:${process.env.MONGO_ROOT_PASSWORD}@${mongoDomainName}:27017/${process.env.MONGO_DB}`);
-  mongo = await mongoose.connect(`mongodb://${process.env.MONGO_ROOT_USER}:${process.env.MONGO_ROOT_PASSWORD}@${mongoDomainName}:27017/${process.env.MONGO_DB}`, {
+  console.log(`Connecting to mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${mongoDomainName}:27017/${process.env.MONGO_INITDB_DATABASE}`);
+  mongo = await mongoose.connect(`mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${mongoDomainName}:27017/${process.env.MONGO_INITDB_DATABASE}`, {
     authSource: 'admin',
   });
 };

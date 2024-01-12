@@ -37,13 +37,13 @@ services:
     ports:
       - 27017:27017
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
-      MONGO_INITDB_DATABASE: ${MONGO_DB:-app}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-app}
     volumes:
       - ./mongo-data:/data/db
     healthcheck:
-      test: ["CMD", "mongo", "--username", "${MONGO_ROOT_USER:-root}", "--password", "${MONGO_ROOT_PASSWORD:-password}", "--authenticationDatabase", "admin", "--eval", "db.stats().ok"]
+      test: ["CMD", "mongo", "--username", "${MONGO_INITDB_ROOT_USERNAME:-root}", "--password", "${MONGO_INITDB_ROOT_PASSWORD:-password}", "--authenticationDatabase", "admin", "--eval", "db.stats().ok"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -59,9 +59,9 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-root}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       POSTGRES_DB: ${POSTGRES_DB:-app}
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
-      MONGO_INITDB_DATABASE: ${MONGO_DB:-app}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-app}
       JWT_SECRET: ${JWT_SECRET:-secret}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8080}
       BASE_PATH: ${BASE_PATH:-/}
