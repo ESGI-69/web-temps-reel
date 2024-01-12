@@ -16,6 +16,8 @@ spec:
       containers:
         - name: posgress-database
           image: postgres:15.4-alpine
+          ports:
+          - containerPort: 5432
           volumeMounts:
           - name: posgress-database-data
             mountPath: /var/lib/postgresql/data
