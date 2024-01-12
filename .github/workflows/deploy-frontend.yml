@@ -30,6 +30,7 @@ jobs:
       - name: Create .env.production file to with correct API URL
         # Replace VITE_API line with the production URL
         run: sed "s#VITE_API=.*#VITE_API=${{ vars.URL }}api#g" .env.example > .env.production
+        working-directory: ./frontend
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
