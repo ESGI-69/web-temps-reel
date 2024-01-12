@@ -9,8 +9,10 @@ services:
       VITE_API: ${VITE_API:-http://localhost:3000}
       VITE_API_TIMEOUT: ${VITE_API_TIMEOUT:-30000}
       VITE_COOKIE_TOKEN_NAME: ${VITE_COOKIE_TOKEN_NAME:-web-temps-reel-token}
-    # depends_on:
-    #   - api
+    depends_on:
+      - backend
+    env_file:
+      - frontend/.env
 
   postgres:
     image: postgres
@@ -23,10 +25,12 @@ services:
     volumes:
       - ./pg-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-root}", "-d", "${POSTGRES_DB:-app}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    env_file:
+      - backend/.env
 
   mongo:
     image: mongo
@@ -43,4 +47,27 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    env_file:
+      - backend/.env
+
+  backend:
+    build:
+      context: backend
+    ports:
+      - 3000:3000
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-app}
+      JWT_SECRET: ${JWT_SECRET:-secret}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8080}
+      BASE_PATH: ${BASE_PATH:-/}
+    depends_on:
+      - postgres
+      - mongo
+    env_file:
+      - backend/.env
       

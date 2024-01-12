@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: web-temps-reel
+  labels:
+    app: node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node
+  template:
+    metadata:
+      labels:
+        app: node
+    spec:
+      containers:
+      - name: front
+        image: gatien1/web-temps-reel-backend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        # secret
+        envFrom:
+        - secretRef:
+            name: backend-secrets
+        - secretRef:
+            name: database-secrets
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: web-temps-reel
+spec:
+  selector:
+    app: node
+  ports:
+  - protocol: TCP
+    port : 3000
+    targetPort: 3000
