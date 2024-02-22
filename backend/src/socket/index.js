@@ -16,5 +16,25 @@ export default () => {
       console.log('[Socket] disconnected');
       delete users[client.id];
     });
+
+    client.on('joinRoom', (room) => {
+      // users[id] = client;
+      console.log(`User join room: ${room}`);
+    });
+
+    client.on('leaveRoom', (room) => {
+      client.leave(room);
+      console.log(`User left room: ${room}`);
+    });
+
   });
+
+  
+};
+
+export const joinSocketRoom = async (userId, roomId) => {
+  const socket = users[userId];
+  console.log(users);
+  await socket.join(roomId);
+  console.log(`User joined room: ${roomId}`);
 };
