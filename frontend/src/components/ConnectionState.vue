@@ -2,16 +2,11 @@
   <p>State: {{ connected }}</p>
 </template>
 
-<script>
+<script setup>
 import { state } from '@/socket';
+import { computed } from 'vue'; // Importez computed de vue, pas de Vue.
 
-export default {
-  name: 'ConnectionState',
-
-  computed: {
-    connected() {
-      return state.connected;
-    },
-  },
-};
+const connected = computed(() => state.connected);
 </script>
+
+

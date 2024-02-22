@@ -11,25 +11,17 @@
   </form>
 </template>
 
-<script>
-export default {
-  name: 'MyForm',
-  emits: [ 'submit' ],
+<script setup>
+import { ref, defineEmits } from 'vue';
 
-  data() {
-    return {
-      isLoading: false,
-      value: '',
-    };
-  },
+const isLoading = ref(false);
+const value = ref('');
 
-  methods: {
-    onSubmit() {
-      // console.log('form sent');
-      this.isLoading = true;
-      this.$emit('submit', this.value);
-      this.isLoading = false;
-    },
-  },
+//bugfix pour l'emit 'ambuiguity'
+const emits = defineEmits('submit');
+const onSubmit = () => {
+  isLoading.value = true;
+  emits('submit', value.value);
+  isLoading.value = false;
 };
 </script>

@@ -7,19 +7,14 @@
   </button>
 </template>
 
-<script>
+<script setup>
 import { socket } from '@/socket';
 
-export default {
-  name: 'ConnectionManager',
+const connect = () => {
+  socket.connect();
+};
 
-  methods: {
-    connect() {
-      socket.connect();
-    },
-    disconnect() {
-      socket.disconnect();
-    },
-  },
+const disconnect = () => {
+  socket.disconnect();
 };
 </script>
