@@ -4,6 +4,7 @@ import { io } from '../index.js';
  * @type {Object.<string, import('socket.io').Socket>}
  */
 export let users = {};
+export let rooms = {};
 
 export default () => {
   io.on('connection', (client) => {
@@ -19,7 +20,16 @@ export default () => {
 
     client.on('joinRoom', (room) => {
       // users[id] = client;
-      console.log(`User join room: ${room}`);
+      // console.log('creation de la room:'+room);
+      const roomId = Math.floor(Math.random() * 10);
+      client.join(roomId);
+      let roomCreated = {
+        id:roomId,
+        name:room
+      };
+      client.emit('roomJoined', roomCreated);
+      console.log(`User join room: ${roomId}`);
+      rooms[roomId] = room;
     });
 
     client.on('leaveRoom', (room) => {
@@ -28,8 +38,6 @@ export default () => {
     });
 
   });
-
-  
 };
 
 export const joinSocketRoom = async (userId, roomId) => {
