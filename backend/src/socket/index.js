@@ -20,21 +20,18 @@ export default () => {
 
     client.on('joinRoom', (room) => {
       // users[id] = client;
-      // console.log('creation de la room:'+room);
-      const roomId = Math.floor(Math.random() * 10);
+      const roomId = Math.floor(Math.random() * 100);
       client.join(roomId);
       let roomCreated = {
         id:roomId,
-        name:room
+        name:room,
       };
       client.emit('roomJoined', roomCreated);
-      console.log(`User join room: ${roomId}`);
       rooms[roomId] = room;
     });
 
     client.on('leaveRoom', (room) => {
       client.leave(room);
-      console.log(`User left room: ${room}`);
     });
 
   });
@@ -42,7 +39,5 @@ export default () => {
 
 export const joinSocketRoom = async (userId, roomId) => {
   const socket = users[userId];
-  console.log(users);
   await socket.join(roomId);
-  console.log(`User joined room: ${roomId}`);
 };
