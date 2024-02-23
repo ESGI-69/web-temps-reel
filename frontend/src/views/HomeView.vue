@@ -18,6 +18,13 @@
     >
       Logout
     </a>
+    <!-- todo check if user is admin -->
+    <RouterLink
+      v-if="isLogged"
+      to="/admin"
+    >
+      Admin
+    </RouterLink>
     <RouterLink
       v-if="isLogged"
       to="/room"
