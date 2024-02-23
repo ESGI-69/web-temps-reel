@@ -47,7 +47,6 @@ export default (sequelize) => {
         allowNull: false,
         validate: {
           min: 8,
-          is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/,
         },
       },
       role: {
