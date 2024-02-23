@@ -49,6 +49,7 @@ export default {
    */
   post: async (req, res, next) => {
     try {
+      // Avoid injecting unwanted fields
       const questionPayload = {
         title: req.body.title,
         description: req.body.description,

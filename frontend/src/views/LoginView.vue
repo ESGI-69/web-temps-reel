@@ -45,7 +45,6 @@ const router = useRouter();
 const login = async () => {
   try {
     await authStore.login({ username: username.value, password: password.value });
-    console.log('sqd');
     router.push({ name: 'home' });
   } catch (error) {
     console.error(error);

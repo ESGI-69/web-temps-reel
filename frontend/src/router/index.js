@@ -23,12 +23,23 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('@/views/LoginView.vue'),
-    // todo route only for admins
     },
     {
       path: '/admin',
       name: 'admin',
-      component: () => import('@/views/AdminView.vue'),
+      component: () => import('@/views/Admin/AdminView.vue'),
+      children: [
+        {
+          path: 'quizzes',
+          name: 'admin-quizzes',
+          component: () => import('@/views/Admin/AdminQuizzesView.vue'),
+        },
+        {
+          path: 'questions',
+          name: 'admin-questions',
+          component: () => import('@/views/Admin/AdminQuestionsView.vue'),
+        },
+      ],
     },
     {
       path: '/register',

@@ -1,4 +1,4 @@
-import quizzService from '../services/quizz';
+import quizzService from '../services/quizz.js';
 
 export default {
   /**
@@ -49,6 +49,7 @@ export default {
    */
   post: async (req, res, next) => {
     try {
+      // Avoid injecting unwanted fields
       const quizzPayload = {
         title: req.body.title,
         description: req.body.description,
@@ -69,7 +70,12 @@ export default {
    */
   patch: async (req, res, next) => {
     try {
-      const quizz = await quizzService.update({ id: req.params.id }, req.body);
+      // Avoid injecting unwanted fields
+      const quizzPayload = {
+        title: req.body.title,
+        description: req.body.description,
+      };
+      const quizz = await quizzService.update({ id: req.params.id }, quizzPayload);
       res.json(quizz);
     } catch (err) {
       next(err);

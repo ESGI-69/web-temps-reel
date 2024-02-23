@@ -10,3 +10,5 @@ router.get('/:id', isLogged, questionController.get);
 router.post('/', isAdmin, questionController.post);
 router.patch('/:id', isAdmin, questionController.patch);
 router.delete('/:id', isAdmin, questionController.delete);
+
+export default router;
