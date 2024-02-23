@@ -3,7 +3,7 @@ import api from '@/plugins/axios';
 import Cookies from 'js-cookie';
 
 export const useAuthStore = defineStore({
-  id: 'room',
+  id: 'authStore',
   state: () => ({
     profile: null,
   }),
@@ -19,6 +19,7 @@ export const useAuthStore = defineStore({
         this.profile = data;
       } catch (error) {
         console.error(error);
+        throw error;
       }
     },
 

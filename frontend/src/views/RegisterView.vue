@@ -1,7 +1,7 @@
 <template>
   <div class="about">
-    <h1>Login</h1>
-    <form @submit.prevent="login">
+    <h1>Register</h1>
+    <form @submit.prevent="register">
       <div class="form-group">
         <label for="username">Username</label>
         <input
@@ -21,11 +21,11 @@
         >
       </div>
       <button type="submit">
-        Login
+        Register
       </button>
     </form>
-    <RouterLink to="/register">
-      Create an account
+    <RouterLink to="/login">
+      Already have an account?
     </RouterLink>
   </div>
 </template>
@@ -33,20 +33,19 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/authStore';
+import { useUserStore } from '@/stores/userStore';
 
-const authStore = useAuthStore();
+const userStore = useUserStore();
 
 const username = ref('');
 const password = ref('');
 
 const router = useRouter();
 
-const login = async () => {
+const register = async () => {
   try {
-    await authStore.login({ username: username.value, password: password.value });
-    console.log('sqd');
-    router.push({ name: 'home' });
+    await userStore.postUser({ username: username.value, password: password.value });
+    router.push({ name: 'login' });
   } catch (error) {
     console.error(error);
   }

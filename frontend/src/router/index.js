@@ -24,16 +24,29 @@ const router = createRouter({
       name: 'login',
       component: () => import('@/views/LoginView.vue'),
     },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/views/RegisterView.vue'),
+    },
   ],
 });
 
 router.beforeEach((to, _from, next) => {
-  if (to.name !== 'login' && !Cookies.get(import.meta.env.VITE_COOKIE_TOKEN_NAME)) {
-    next({ name: 'login' });
-  } else if (to.name === 'login' && Cookies.get(import.meta.env.VITE_COOKIE_TOKEN_NAME)) {
-    next({ name: 'home' });
+  const token = Cookies.get(import.meta.env.VITE_COOKIE_TOKEN_NAME);
+
+  if (token) {
+    if (to.name === 'login' || to.name === 'register') {
+      next({ name: 'home' });
+    } else {
+      next();
+    }
   } else {
-    next();
+    if (to.name === 'register' || to.name === 'login') {
+      next();
+    } else {
+      next({ name: 'login' });
+    }
   }
 });
 
