@@ -5,6 +5,7 @@ export const useRoomStore = defineStore({
   state: () => ({
     roomId: null,
     roomName:null,
+    users: {},
   }),
   actions: {
     setRoomId(roomId) {
@@ -12,6 +13,9 @@ export const useRoomStore = defineStore({
     },
     setRoomName(roomName) {
       this.roomName = roomName;
+    },
+    setUsers(users) {
+      this.users = users;
     },
   },
 });

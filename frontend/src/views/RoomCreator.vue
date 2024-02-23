@@ -21,6 +21,7 @@ const router = useRouter();
 
 const createRoom = (roomName) => {
   socket.emit('joinRoom', roomName);
+  socket.emit('getRoomUsers', roomName);
 };
 
 const onRoomJoined = (roomObject) => {
