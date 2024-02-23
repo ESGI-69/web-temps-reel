@@ -3,7 +3,7 @@
     <RouterLink to="/login">
       Login
     </RouterLink>
-    <RouterLink to="/room-creator">
+    <RouterLink to="/room">
       Create a room
     </RouterLink>
   </main>
