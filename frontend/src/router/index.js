@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
@@ -18,8 +19,22 @@ const router = createRouter({
       name: 'roomid',
       component: () => import('@/views/RoomView.vue'),
     },
-
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/LoginView.vue'),
+    },
   ],
+});
+
+router.beforeEach((to, _from, next) => {
+  if (to.name !== 'login' && !Cookies.get(import.meta.env.VITE_COOKIE_TOKEN_NAME)) {
+    next({ name: 'login' });
+  } else if (to.name === 'login' && Cookies.get(import.meta.env.VITE_COOKIE_TOKEN_NAME)) {
+    next({ name: 'home' });
+  } else {
+    next();
+  }
 });
 
 export default router;

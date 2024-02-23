@@ -3,11 +3,11 @@
     <h1>Login</h1>
     <form @submit.prevent="login">
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="username">Username</label>
         <input
-          id="email"
-          v-model="email"
-          type="email"
+          id="username"
+          v-model="username"
+          type="username"
           required
         >
       </div>
@@ -30,19 +30,20 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/store/auth';
+import { useAuthStore } from '@/stores/authStore';
 
-const email = ref('');
+const authStore = useAuthStore();
+
+const username = ref('');
 const password = ref('');
 
 const router = useRouter();
 
-const authStore = useAuthStore();
-
 const login = async () => {
   try {
-    await authStore.login(email.value, password.value);
-    router.push('/');
+    await authStore.login({ username: username.value, password: password.value });
+    console.log('sqd');
+    router.push({ name: 'home' });
   } catch (error) {
     console.error(error);
   }
