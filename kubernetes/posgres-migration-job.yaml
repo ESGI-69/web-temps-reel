@@ -11,9 +11,8 @@ spec:
           image: gatien1/marmiton-backend:latest
           command:
             - npx
-            - posgres
-            - migrate
-            - deploy
+            - sequelize-cli
+            - db:migrate
           env:
             - name: DATABASE_URL
               valueFrom:
