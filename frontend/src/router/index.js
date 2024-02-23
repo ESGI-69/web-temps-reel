@@ -35,6 +35,11 @@ const router = createRouter({
           component: () => import('@/views/Admin/AdminQuizzesView.vue'),
         },
         {
+          path: 'quizzes/:id',
+          name: 'admin-quizz',
+          component: () => import('@/views/Admin/AdminQuizzView.vue'),
+        },
+        {
           path: 'questions',
           name: 'admin-questions',
           component: () => import('@/views/Admin/AdminQuestionsView.vue'),

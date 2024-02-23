@@ -32,6 +32,9 @@
     <p v-if="isPostQuizzLoading">
       Loading...
     </p>
+    <p v-if="!isFormValid">
+      {{ errorMessage }}
+    </p>
   </Modal>
 </template>
 
@@ -45,16 +48,21 @@ const quizzStore = useQuizzStore();
 const title = ref('');
 const description = ref('');
 const isModalOpen = ref(false);
+const isFormValid = ref(true);
+const errorMessage = ref('Both title and description are required');
 
 const isPostQuizzLoading = computed(() => quizzStore.isPostQuizzLoading);
 
 const onSubmit = async () => {
-  console.log('onSubmit before await');
+  if (!title.value || !description.value) {
+    isFormValid.value = false;
+    return;
+  }
+  isFormValid.value = true;
   await quizzStore.postQuizz({
     title: title.value,
     description: description.value,
   });
-  console.log('onSubmit after await');
   title.value = '';
   description.value = '';
   isModalOpen.value = false;

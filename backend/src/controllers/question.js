@@ -52,7 +52,9 @@ export default {
       // Avoid injecting unwanted fields
       const questionPayload = {
         title: req.body.title,
-        description: req.body.description,
+        options: req.body.options,
+        answer: req.body.answer,
+        quizzId: req.body.quizzId,
       };
       const question = await questionService.create(questionPayload);
       res.status(201).json(question);

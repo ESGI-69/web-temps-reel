@@ -1,5 +1,8 @@
 # Web Temps Réel
 
+## Contributions de l'équipe
+- Quentin Peltier (timdev0) : Création de quizz et de questions, 
+
 ## Mise en prod
 
 ### Création du namespace
