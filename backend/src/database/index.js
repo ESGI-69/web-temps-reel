@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import Sequelize from 'sequelize';
 import dotenv from 'dotenv';
 
+import user from './models/user.js';
+
 dotenv.config();
 
 const mongoDomainName = process.env.MONGO_DATABASE_SERVICE_SERVICE_HOST || 'localhost';
@@ -21,4 +23,15 @@ const connectMongo = async () => {
   });
 };
 
-export { connectMongo, sequelize, mongo };
+// Load models
+const User = user(sequelize);
+
+// Launch associations methods for relations between tables
+User.associate();
+
+export {
+  connectMongo,
+  sequelize,
+  mongo,
+  User,
+};
