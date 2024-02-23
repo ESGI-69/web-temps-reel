@@ -14,7 +14,7 @@ import ConnectionState from '@/components/ConnectionState.vue';
 
 import { socket } from '@/socket.js';
 import { useRouter } from 'vue-router';
-import { useRoomStore } from '@/store/room.js';
+import { useRoomStore } from '@/stores/roomStore.js';
 
 const roomStore = useRoomStore();
 const router = useRouter();

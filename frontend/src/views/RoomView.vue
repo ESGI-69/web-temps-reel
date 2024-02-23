@@ -18,7 +18,7 @@
 
 <script setup>
 import ConnectionState from '@/components/ConnectionState.vue';
-import { useRoomStore } from '@/store/room.js';
+import { useRoomStore } from '@/stores/roomStore.js';
 import { onMounted } from 'vue';
 import { socket } from '@/socket.js';
 
