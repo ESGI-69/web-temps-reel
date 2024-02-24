@@ -1,5 +1,7 @@
 import { io } from '../index.js';
 import Quizz from '../services/quizz.js';
+import userService from '../services/user.js';
+import jwt from 'jsonwebtoken';
 
 /**
  * @type {Object.<string, import('socket.io').Socket>}
@@ -8,10 +10,17 @@ export let users = {};
 export let rooms = {};
 
 export default () => {
-  io.on('connection', (client) => {
-    // const clientJwt = client.handshake.query.token;
+  io.on('connection', async (client) => {
+    let user;
+    const clientJwt = client.handshake.query.token;
+
+    jwt.verify(clientJwt, process.env.JWT_SECRET);
+    const { id } = jwt.decode(clientJwt);
+    user = await userService.findById(id);
+    users[id] = client;
     // eslint-disable-next-line no-console
-    console.log('[Socket] connected');
+    console.log(`[Socket ${user.username}] Connected`);
+    // asignUserSocketToGameRoom(user);
 
     client.on('disconnect', () => {
       // eslint-disable-next-line no-console

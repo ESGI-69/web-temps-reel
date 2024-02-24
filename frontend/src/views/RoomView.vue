@@ -22,11 +22,12 @@
 import ConnectionState from '@/components/ConnectionState.vue';
 import { useRoomStore } from '@/stores/roomStore.js';
 import { onMounted } from 'vue';
-import { socket } from '@/socket.js';
+import { socket, connect } from '@/socket.js';
 
 const roomStore = useRoomStore();
 
-onMounted(() => {
+onMounted(async () => {
+  await connect();
   socket.on('roomUsers', (newUsers) => {
     roomStore.setUsers(newUsers);
   });

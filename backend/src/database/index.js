@@ -14,7 +14,7 @@ const postgresDomainName = process.env.POSGRES_DATABASE_SERVICE_SERVICE_HOST || 
 
 // eslint-disable-next-line no-console
 console.log(`Connecting to postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${postgresDomainName}:5432/${process.env.POSTGRES_DB}`);
-const sequelize = new Sequelize(`postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${postgresDomainName}:5432/${process.env.POSTGRES_DB}`);
+const sequelize = new Sequelize(`postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${postgresDomainName}:5432/${process.env.POSTGRES_DB}`, { logging: false });
 
 let mongo;
 
