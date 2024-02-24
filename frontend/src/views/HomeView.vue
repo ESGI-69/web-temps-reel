@@ -20,7 +20,7 @@
     </a>
     <!-- todo check if user is admin -->
     <RouterLink
-      v-if="isLogged"
+      v-if="isAdmin"
       to="/admin"
     >
       Admin
@@ -31,6 +31,10 @@
     >
       Create a room
     </RouterLink>
+    <div v-if="isLogged">
+      <p>Username: {{ profile.username }}</p>
+      <p>Role: {{ profile.role }}</p>
+    </div>
   </main>
 </template>
 
@@ -40,5 +44,5 @@ import { storeToRefs } from 'pinia';
 
 const authStore = useAuthStore();
 
-const { isLogged } = storeToRefs(authStore);
+const { isLogged, isAdmin, profile } = storeToRefs(authStore);
 </script>

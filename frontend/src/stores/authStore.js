@@ -11,6 +11,9 @@ export const useAuthStore = defineStore({
     isLogged() {
       return !!this.profile;
     },
+    isAdmin() {
+      return this.profile?.role === 'ADMIN';
+    },
   },
   actions: {
     async getProfile() {
