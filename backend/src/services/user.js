@@ -25,7 +25,7 @@ export default {
     });
   },
   findById: function (id) {
-    return User.findByPk(id, { include: Room });
+    return User.findByPk(id, { include: { model: Room, as: 'currentRoom' } });
   },
   findByIdWithPassword: function (id) {
     return User.scope('withPassword').findByPk(id);

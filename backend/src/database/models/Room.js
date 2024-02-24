@@ -9,9 +9,9 @@ import { Quizz, User } from '../index.js';
 export default (connection) => {
   class Room extends Model {
     static associate() {
-      this.belongsTo(Quizz, { foreignKey: 'quizzId' });
-      this.belongsTo(User, { foreignKey: 'createdBy' });
-      this.hasMany(User);
+      this.belongsTo(Quizz, { foreignKey: 'quizzId', as: 'quizz' });
+      this.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
+      this.hasMany(User, { as: 'players' });
     }
   }
 

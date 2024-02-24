@@ -4,8 +4,7 @@ import api from '@/plugins/axios';
 export const useRoomStore = defineStore({
   id: 'room',
   state: () => ({
-    room: null,
-    users: {},
+    room: {},
 
     isRoomsLoading: false,
     isRoomLoading: false,
@@ -22,8 +21,9 @@ export const useRoomStore = defineStore({
       } catch (error) {
         console.error(error);
         throw error;
+      } finally {
+        this.isPostRoomLoading = false;
       }
-      this.isPostRoomLoading = false;
     },
     async getRooms() {
       this.isRoomsLoading = true;
@@ -33,8 +33,9 @@ export const useRoomStore = defineStore({
       } catch (error) {
         console.error(error);
         throw error;
+      } finally {
+        this.isRoomsLoading = false;
       }
-      this.isRoomsLoading = false;
     },
     async getRoom(id) {
       this.isRoomLoading = true;
@@ -44,8 +45,9 @@ export const useRoomStore = defineStore({
       } catch (error) {
         console.error(error);
         throw error;
+      } finally {
+        this.isRoomLoading = false;
       }
-      this.isRoomLoading = false;
     },
   },
 });

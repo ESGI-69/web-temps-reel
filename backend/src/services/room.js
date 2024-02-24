@@ -19,8 +19,18 @@ export default {
   findById: function (id) {
     return Room.findByPk(id, {
       include: [
-        Quizz,
-        User,
+        {
+          as: 'quizz',
+          model: Quizz,
+        },
+        {
+          as: 'creator',
+          model: User,
+        },
+        {
+          as: 'players',
+          model: User,
+        },
       ],
     });
   },
@@ -53,4 +63,5 @@ export default {
       where: criteria,
     });
   },
+
 };

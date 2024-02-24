@@ -9,7 +9,7 @@ import { Room } from '../index.js';
 export default (sequelize) => {
   class User extends Model {
     static associate() {
-      this.belongsTo(Room);
+      this.belongsTo(Room, { foreignKey: 'RoomId', as: 'currentRoom' });
     }
 
     /**
