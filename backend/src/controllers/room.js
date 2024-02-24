@@ -1,4 +1,5 @@
 import roomService from '../services/room.js';
+import userService from '../services/user.js';
 // import { joinSocketRoom } from '../socket/index.js';
 
 export default {
@@ -52,10 +53,13 @@ export default {
     try {
       // Avoid injecting unwanted fields
       const roomPayload = {
-        title: req.body.title,
-        description: req.body.description,
+        name: req.body.name,
+        quizzId: req.body.quizzId,
+        createdBy: req.user.id,
       };
       const room = await roomService.create(roomPayload);
+      await userService.update({ id: req.user.id }, { RoomId: room.id });
+
       res.status(201).json(room);
     } catch (err) {
       next(err);

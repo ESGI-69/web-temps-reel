@@ -1,29 +1,53 @@
 import { defineStore } from 'pinia';
+import api from '@/plugins/axios';
 
 export const useRoomStore = defineStore({
   id: 'room',
   state: () => ({
-    roomId: null,
-    roomName:null,
-    roomQuizz: null,
-    createdBy: null,
-    users: {},
+    room: {},
+
+    isRoomsLoading: false,
+    isRoomLoading: false,
+    isPostRoomLoading: false,
+    isPatchRoomLoading: false,
+    isDeleteRoomLoading: false,
   }),
   actions: {
-    setRoomId(roomId) {
-      this.roomId = roomId;
+    async createRoom(room) {
+      this.isPostRoomLoading = true;
+      try {
+        const { data } = await api.post('/room', room);
+        this.room = data;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      } finally {
+        this.isPostRoomLoading = false;
+      }
     },
-    setRoomName(roomName) {
-      this.roomName = roomName;
+    async getRooms() {
+      this.isRoomsLoading = true;
+      try {
+        const { data } = await api.get('/room');
+        this.rooms = data;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      } finally {
+        this.isRoomsLoading = false;
+      }
     },
-    setUsers(users) {
-      this.users = users;
-    },
-    setRoomQuizz(quizz) {
-      this.roomQuizz = quizz;
-    },
-    setCreatedBy(createdBy) {
-      this.createdBy = createdBy;
+    async getRoom(id) {
+      this.isRoomLoading = true;
+      try {
+        const { data } = await api.get(`/room/${id}`);
+        this.room = data;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      } finally {
+        this.isRoomLoading = false;
+      }
     },
   },
 });

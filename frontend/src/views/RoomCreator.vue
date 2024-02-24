@@ -1,49 +1,62 @@
 <template>
   <main>
     <h2>ROOM creator</h2>
-    <ConnectionState />
     <p>Current room : {{ roomStore.roomName }} - {{ roomStore.roomId }}</p>
-    <MyForm @submit="createRoom" />
+    <form @submit.prevent="onSubmit">
+      <input v-model="room.name">
+
+      <p v-if="isQuizzesLoading">
+        Quizzes list loading...
+      </p>
+
+      <select
+        v-model="room.quizzId"
+      >
+        <option
+          v-for="quizz in quizzes"
+          :key="quizz.id"
+          :value="quizz.id"
+        >
+          {{ quizz.title }}
+        </option>
+      </select>
+
+      <button
+        type="submit"
+        :disabled="roomStore.isPostRoomLoading"
+      >
+        Submit
+      </button>
+    </form>
   </main>
 </template>
 
 <script setup>
-import { onUnmounted } from 'vue';
-import MyForm from '@/components/MyForm.vue';
-import ConnectionState from '@/components/ConnectionState.vue';
-
-import { socket, connect } from '@/socket.js';
 import { useRouter } from 'vue-router';
-import { useRoomStore } from '@/stores/roomStore.js';
+import { computed, reactive } from 'vue';
 import { useQuizzStore } from '@/stores/quizzStore';
+import { useRoomStore } from '@/stores/roomStore';
 
+const router = useRouter();
 const quizzStore = useQuizzStore();
+const roomStore = useRoomStore();
 
 quizzStore.getAllQuizzes();
 
-const roomStore = useRoomStore();
-const router = useRouter();
+const quizzes = computed(() => [ ...quizzStore.quizzes ].sort((a, b) => a.id - b.id));
+const isQuizzesLoading = computed(() => quizzStore.isQuizzesLoading);
 
+const room = reactive({
+  name: '',
+  quizzId: '',
+});
 
-const createRoom = async (room) => {
-  await connect();
-  if ( room.name ) {
-    socket.emit('joinRoom', room);
-    socket.emit('getRoomUsers', room.name);
+const onSubmit = async () => {
+  try {
+    await roomStore.createRoom(room);
+    router.push(`/room/${roomStore.room.id}`);
+  } catch (error) {
+    console.error(error);
   }
 };
-
-const onRoomJoined = (roomObject) => {
-  console.log('roomJoined', roomObject);
-  roomStore.setRoomId(roomObject.id);
-  roomStore.setRoomName(roomObject.name);
-  roomStore.setRoomQuizz(roomObject.quizz);
-  roomStore.setCreatedBy(roomObject.createdBy);
-  router.push(`/room/${roomObject.id}`);
-};
-socket.on('roomJoined', onRoomJoined);
-
-onUnmounted(() => {
-  socket.off('roomJoined', onRoomJoined);
-});
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <p>State: {{ connected }}</p>
+  <p>Real time connection: {{ connected ? 'connected' : 'disconnected' }}</p>
 </template>
 
 <script setup>

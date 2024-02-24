@@ -1,5 +1,4 @@
 import { io } from '../index.js';
-import Quizz from '../services/quizz.js';
 import userService from '../services/user.js';
 import jwt from 'jsonwebtoken';
 
@@ -7,7 +6,34 @@ import jwt from 'jsonwebtoken';
  * @type {Object.<string, import('socket.io').Socket>}
  */
 export let users = {};
-export let rooms = {};
+
+/**
+ * Assign the user socket to the game room
+ * @param {import('../models').User} user
+ * @param {string} [roomId] If not provided, the current game of the user will be used
+ */
+export const asignUserSocketToGameRoom = async (user, roomId) => {
+  if (!user || !roomId) return; // If the user is not in a game, do nothing
+  const socket = users[user.id];
+  if (!socket) return; // If the user is not connected, do nothing
+  await socket.join(roomId);
+  // eslint-disable-next-line no-console
+  console.log(`[Socket ${user.username}] Connected to room ${roomId}`);
+};
+
+/**
+ * Remove the user socket from the game room
+ * @param {import('../models').User} user
+ * @param {string} [gameId] If not provided, the current game of the user will be used
+ */
+export const removeUserSocketFromGameRoom = async (user, gameId) => {
+  if (!user || !gameId) return; // If the user is not in a game, do nothing
+  const socket = users[user.id];
+  if (!socket) return; // If the user is not connected, do nothing
+  await socket.leave(gameId);
+  // eslint-disable-next-line no-console
+  console.log(`[Socket ${user.username}] Disconnected from room ${gameId}`);
+};
 
 export default () => {
   io.on('connection', async (client) => {
@@ -20,59 +46,13 @@ export default () => {
     users[id] = client;
     // eslint-disable-next-line no-console
     console.log(`[Socket ${user.username}] Connected`);
-    // asignUserSocketToGameRoom(user);
+    asignUserSocketToGameRoom(user, user.currentRoom?.id);
 
     client.on('disconnect', () => {
+      removeUserSocketFromGameRoom(user, user.currentRoom?.id);
       // eslint-disable-next-line no-console
       console.log('[Socket] disconnected');
       delete users[client.id];
     });
-
-    client.on('joinRoom', async (room) => {
-      // users[id] = client;
-      let roomId;
-      if (rooms[room.name]) {
-        roomId = rooms[room.name];
-      } else {
-        roomId = Math.floor(Math.random() * 100);
-        rooms[room.name] = roomId;
-      }
-      client.join(roomId);
-      const quizz = await Quizz.findById(room.quizzId);
-      let roomCreated = {
-        id:roomId,
-        createdBy:room.createdBy,
-        name:room.name,
-        quizz:quizz,
-      };
-      client.emit('roomJoined', roomCreated);
-      // send roomUsers event to all clients in the room
-      io.to(roomId).emit('roomUsers', getRoomUsers(roomId));
-    });
-
-    // create event that return the list of socket connected to the same room as the client
-    client.on('getRoomUsers', (room) => {
-      //get the list of clients connected to the room
-      let roomId = rooms[room];
-      client.emit('roomUsers', getRoomUsers(roomId));
-    });
-
-    client.on('leaveRoom', (room) => {
-      let roomId = rooms[room];
-      client.leave(room);
-      io.to(roomId).emit('roomUsers', getRoomUsers(roomId));
-    });
-
   });
-};
-
-const getRoomUsers = (room) => {
-  let clients = io.sockets.adapter.rooms.get(room);
-  let clientsArray = Array.from(clients);
-  return clientsArray;
-};
-
-export const joinSocketRoom = async (userId, roomId) => {
-  const socket = users[userId];
-  await socket.join(roomId);
 };

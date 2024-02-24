@@ -1,4 +1,4 @@
-import { User } from './../database/index.js';
+import { Room, User } from './../database/index.js';
 
 export default {
   /**
@@ -25,7 +25,7 @@ export default {
     });
   },
   findById: function (id) {
-    return User.findByPk(id);
+    return User.findByPk(id, { include: { model: Room, as: 'currentRoom' } });
   },
   findByIdWithPassword: function (id) {
     return User.scope('withPassword').findByPk(id);

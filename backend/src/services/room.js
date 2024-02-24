@@ -1,4 +1,4 @@
-import { Room } from './../database/index.js';
+import { Quizz, Room, User } from './../database/index.js';
 
 export default {
 
@@ -17,11 +17,39 @@ export default {
   },
 
   findById: function (id) {
-    return Room.findByPk(id);
+    return Room.findByPk(id, {
+      include: [
+        {
+          as: 'quizz',
+          model: Quizz,
+        },
+        {
+          as: 'creator',
+          model: User,
+        },
+        {
+          as: 'players',
+          model: User,
+        },
+      ],
+    });
   },
 
   create: async function (data) {
-    const room = await Room.create(data);
+    const room = await Room.create(
+      data,
+      {
+        include: [
+          {
+            model: Quizz,
+            as: 'quizz',
+          },
+          {
+            model: User,
+            as: 'creator',
+          },
+        ],
+      });
     return this.findById(room.id);
   },
 
@@ -41,4 +69,5 @@ export default {
       where: criteria,
     });
   },
+
 };

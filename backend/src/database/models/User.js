@@ -1,12 +1,15 @@
 import { DataTypes, Model } from 'sequelize';
 import bcrypt from 'bcryptjs';
 
+import { Room } from '../index.js';
+
 /**
  * @param {import('sequelize').Sequelize} sequelize
  */
 export default (sequelize) => {
   class User extends Model {
     static associate() {
+      this.belongsTo(Room, { foreignKey: 'RoomId', as: 'currentRoom' });
     }
 
     /**
