@@ -46,10 +46,10 @@ export default () => {
     users[id] = client;
     // eslint-disable-next-line no-console
     console.log(`[Socket ${user.username}] Connected`);
-    asignUserSocketToGameRoom(user, user.currentRoom.id);
+    asignUserSocketToGameRoom(user, user.currentRoom?.id);
 
     client.on('disconnect', () => {
-      removeUserSocketFromGameRoom(user, user.currentRoom.id);
+      removeUserSocketFromGameRoom(user, user.currentRoom?.id);
       // eslint-disable-next-line no-console
       console.log('[Socket] disconnected');
       delete users[client.id];

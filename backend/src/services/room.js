@@ -40,8 +40,14 @@ export default {
       data,
       {
         include: [
-          Quizz,
-          User,
+          {
+            model: Quizz,
+            as: 'quizz',
+          },
+          {
+            model: User,
+            as: 'creator',
+          },
         ],
       });
     return this.findById(room.id);
