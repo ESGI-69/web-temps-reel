@@ -1,4 +1,5 @@
 import { io } from '../index.js';
+import Quizz from '../services/quizz.js';
 
 /**
  * @type {Object.<string, import('socket.io').Socket>}
@@ -18,19 +19,22 @@ export default () => {
       delete users[client.id];
     });
 
-    client.on('joinRoom', (room) => {
+    client.on('joinRoom', async (room) => {
       // users[id] = client;
       let roomId;
-      if (rooms[room]) {
-        roomId = rooms[room];
+      if (rooms[room.name]) {
+        roomId = rooms[room.name];
       } else {
         roomId = Math.floor(Math.random() * 100);
-        rooms[room] = roomId;
+        rooms[room.name] = roomId;
       }
       client.join(roomId);
+      const quizz = await Quizz.findById(room.quizzId);
       let roomCreated = {
         id:roomId,
-        name:room,
+        createdBy:room.createdBy,
+        name:room.name,
+        quizz:quizz,
       };
       client.emit('roomJoined', roomCreated);
       // send roomUsers event to all clients in the room

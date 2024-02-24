@@ -1,28 +1,98 @@
-import { joinSocketRoom } from '../socket/index.js';
+import roomService from '../services/room.js';
+// import { joinSocketRoom } from '../socket/index.js';
 
 export default {
-  get: (req, res) => {
-    res.send({
-      message: 'List of rooms',
-    });
-  },
-
-  getRoom: (req, res) => {
-    const roomId = req.params.id;
-    res.send(
-      `Details of room ${roomId}`,
-    );
-  },
-
-  createRoom: (req, res) => {
+  /**
+   * Express.js controller for GET /room
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @returns {Promise<void>}
+   */
+  cget: async (req, res, next) => {
+    const {
+      _sort = {},
+      ...criteria
+    } = req.query;
     try {
-      let roomId = Math.floor(Math.random() * 10);
-      let userId = req.body.user.id;
-      joinSocketRoom(userId, roomId);
-      res.status(201).json({ id: roomId });
-    } catch (error) {
-      res.status(500).json({ message: 'Internal server error' });
+      const room = await roomService.findAll(criteria, {
+        order: _sort,
+      });
+      res.json(room);
+    } catch (err) {
+      next(err);
     }
   },
 
+  /**
+   * Express.js controller for GET /room/:id
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @returns {Promise<void>}
+   */
+  get: async (req, res, next) => {
+    try {
+      const room = await roomService.findById(req.params.id);
+      if (!room) return res.sendStatus(404);
+      res.json(room);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  /**
+   * Express.js controller for POST /room
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @returns {Promise<void>}
+   */
+  post: async (req, res, next) => {
+    try {
+      // Avoid injecting unwanted fields
+      const roomPayload = {
+        title: req.body.title,
+        description: req.body.description,
+      };
+      const room = await roomService.create(roomPayload);
+      res.status(201).json(room);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  /**
+   * Express.js controller for PATCH /room/:id
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @returns {Promise<void>}
+   */
+  patch: async (req, res, next) => {
+    try {
+      const room = await roomService.update({ id: req.params.id }, req.body);
+      if (!room) return res.sendStatus(404);
+      res.json(room);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  /**
+   * Express.js controller for DELETE /room/:id
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @returns {Promise<void>}
+   */
+  delete: async (req, res, next) => {
+    try {
+      const room = await roomService.remove({ id: req.params.id });
+      if (!room) return res.sendStatus(404);
+      res.sendStatus(204);
+    } catch (err) {
+      next(err);
+    }
+  },
 };

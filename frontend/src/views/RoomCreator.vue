@@ -15,18 +15,28 @@ import ConnectionState from '@/components/ConnectionState.vue';
 import { socket } from '@/socket.js';
 import { useRouter } from 'vue-router';
 import { useRoomStore } from '@/stores/roomStore.js';
+import { useQuizzStore } from '@/stores/quizzStore';
+
+const quizzStore = useQuizzStore();
+
+quizzStore.getAllQuizzes();
 
 const roomStore = useRoomStore();
 const router = useRouter();
 
-const createRoom = (roomName) => {
-  socket.emit('joinRoom', roomName);
-  socket.emit('getRoomUsers', roomName);
+const createRoom = (room) => {
+  if ( room.name ) {
+    socket.emit('joinRoom', room);
+    socket.emit('getRoomUsers', room.name);
+  }
 };
 
 const onRoomJoined = (roomObject) => {
+  console.log('roomJoined', roomObject);
   roomStore.setRoomId(roomObject.id);
   roomStore.setRoomName(roomObject.name);
+  roomStore.setRoomQuizz(roomObject.quizz);
+  roomStore.setCreatedBy(roomObject.createdBy);
   router.push(`/room/${roomObject.id}`);
 };
 socket.on('roomJoined', onRoomJoined);

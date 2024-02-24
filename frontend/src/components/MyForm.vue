@@ -2,6 +2,22 @@
   <form @submit.prevent="onSubmit">
     <input v-model="value">
 
+    <p v-if="isQuizzesLoading">
+      Quizzes list loading...
+    </p>
+
+    <select
+      v-model="selected"
+    >
+      <option
+        v-for="quizz in quizzes"
+        :key="quizz.id"
+        :value="quizz.id"
+      >
+        {{ quizz.title }}
+      </option>
+    </select>
+
     <button
       type="submit"
       :disabled="isLoading"
@@ -12,16 +28,30 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { computed, ref, defineEmits } from 'vue';
+import { useQuizzStore } from '@/stores/quizzStore';
+import { useAuthStore } from '@/stores/authStore';
+
+const quizzStore = useQuizzStore();
+const authStore = useAuthStore();
+
+const quizzes = computed(() => [ ...quizzStore.quizzes ].sort((a, b) => a.id - b.id));
+const isQuizzesLoading = computed(() => quizzStore.isQuizzesLoading);
 
 const isLoading = ref(false);
 const value = ref('');
+const selected = ref('');
 
 //bugfix pour l'emit 'ambuiguity'
 const emits = defineEmits('submit');
 const onSubmit = () => {
   isLoading.value = true;
-  emits('submit', value.value);
+  const submited_value = {
+    name: value.value,
+    quizzId: selected.value,
+    createdBy: authStore.profile.id,
+  };
+  emits('submit', submited_value);
   isLoading.value = false;
 };
 </script>

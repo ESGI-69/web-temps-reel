@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import user from './models/user.js';
 import quizz from './models/Quizz.js';
 import question from './models/Question.js';
+import room from './models/Room.js';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ const connectMongo = async () => {
 const User = user(sequelize);
 const Quizz = quizz(sequelize);
 const Question = question(sequelize);
+const Room = room(sequelize);
 
 // Launch associations methods for relations between tables
 User.associate();
@@ -40,4 +42,5 @@ export {
   User,
   Quizz,
   Question,
+  Room,
 };
