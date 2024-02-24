@@ -16,7 +16,7 @@
           v-for="user in room.players"
           :key="user"
         >
-          {{ user }}
+          {{ user.username }}
         </li>
       </ul>
     </template>
