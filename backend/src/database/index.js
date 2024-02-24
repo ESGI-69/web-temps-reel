@@ -3,6 +3,8 @@ import Sequelize from 'sequelize';
 import dotenv from 'dotenv';
 
 import user from './models/user.js';
+import quizz from './models/Quizz.js';
+import question from './models/Question.js';
 
 dotenv.config();
 
@@ -25,6 +27,8 @@ const connectMongo = async () => {
 
 // Load models
 const User = user(sequelize);
+const Quizz = quizz(sequelize);
+const Question = question(sequelize);
 
 // Launch associations methods for relations between tables
 User.associate();
@@ -34,4 +38,6 @@ export {
   sequelize,
   mongo,
   User,
+  Quizz,
+  Question,
 };

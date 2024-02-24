@@ -24,6 +24,24 @@ const router = createRouter({
       name: 'login',
       component: () => import('@/views/LoginView.vue'),
     },
+    //todo check if the user is admin
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('@/views/Admin/AdminView.vue'),
+      children: [
+        {
+          path: 'quizzes',
+          name: 'admin-quizzes',
+          component: () => import('@/views/Admin/AdminQuizzesView.vue'),
+        },
+        {
+          path: 'quizzes/:id',
+          name: 'admin-quizz',
+          component: () => import('@/views/Admin/AdminQuizzView.vue'),
+        },
+      ],
+    },
     {
       path: '/register',
       name: 'register',
