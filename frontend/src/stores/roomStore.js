@@ -17,5 +17,8 @@ export const useRoomStore = defineStore({
     setUsers(users) {
       this.users = users;
     },
+    setRoomQuizz(quizz) {
+      this.roomQuizz = quizz;
+    },
   },
 });

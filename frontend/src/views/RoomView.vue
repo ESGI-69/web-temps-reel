@@ -4,7 +4,9 @@
     <p>Current room: {{ roomStore.roomName }} - {{ roomStore.roomId }}</p>
     <ConnectionState />
 
-    Users in the room:
+    <p>Quizz: {{ roomStore.roomQuizz.title }}</p>
+
+    <p>Users in the room:</p>
     <ul>
       <li
         v-for="user in roomStore.users"
