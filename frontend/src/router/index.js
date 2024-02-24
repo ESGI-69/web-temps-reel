@@ -25,7 +25,6 @@ const router = createRouter({
       name: 'login',
       component: () => import('@/views/LoginView.vue'),
     },
-    //todo check if the user is admin
     {
       path: '/admin',
       name: 'admin',
