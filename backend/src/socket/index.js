@@ -32,6 +32,7 @@ export default () => {
       const quizz = await Quizz.findById(room.quizzId);
       let roomCreated = {
         id:roomId,
+        createdBy:room.createdBy,
         name:room.name,
         quizz:quizz,
       };

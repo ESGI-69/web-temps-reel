@@ -30,8 +30,10 @@
 <script setup>
 import { computed, ref, defineEmits } from 'vue';
 import { useQuizzStore } from '@/stores/quizzStore';
+import { useAuthStore } from '@/stores/authStore';
 
 const quizzStore = useQuizzStore();
+const authStore = useAuthStore();
 
 const quizzes = computed(() => [ ...quizzStore.quizzes ].sort((a, b) => a.id - b.id));
 const isQuizzesLoading = computed(() => quizzStore.isQuizzesLoading);
@@ -47,9 +49,9 @@ const onSubmit = () => {
   const submited_value = {
     name: value.value,
     quizzId: selected.value,
+    createdBy: authStore.profile.id,
   };
   emits('submit', submited_value);
-  // emits('submit', value.value);
   isLoading.value = false;
 };
 </script>

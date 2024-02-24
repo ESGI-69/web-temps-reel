@@ -32,9 +32,11 @@ const createRoom = (room) => {
 };
 
 const onRoomJoined = (roomObject) => {
+  console.log('roomJoined', roomObject);
   roomStore.setRoomId(roomObject.id);
   roomStore.setRoomName(roomObject.name);
   roomStore.setRoomQuizz(roomObject.quizz);
+  roomStore.setCreatedBy(roomObject.createdBy);
   router.push(`/room/${roomObject.id}`);
 };
 socket.on('roomJoined', onRoomJoined);
