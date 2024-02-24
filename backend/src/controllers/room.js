@@ -1,4 +1,4 @@
-import { roomService } from '../services/index.js';
+import roomService from '../services/room.js';
 // import { joinSocketRoom } from '../socket/index.js';
 
 export default {
