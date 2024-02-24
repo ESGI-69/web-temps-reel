@@ -1,4 +1,4 @@
-import { Room } from './../database/index.js';
+import { Quizz, Room, User } from './../database/index.js';
 
 export default {
 
@@ -17,11 +17,23 @@ export default {
   },
 
   findById: function (id) {
-    return Room.findByPk(id);
+    return Room.findByPk(id, {
+      include: [
+        Quizz,
+        User,
+      ],
+    });
   },
 
   create: async function (data) {
-    const room = await Room.create(data);
+    const room = await Room.create(
+      data,
+      {
+        include: [
+          Quizz,
+          User,
+        ],
+      });
     return this.findById(room.id);
   },
 

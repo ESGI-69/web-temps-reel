@@ -52,8 +52,9 @@ export default {
     try {
       // Avoid injecting unwanted fields
       const roomPayload = {
-        title: req.body.title,
-        description: req.body.description,
+        name: req.body.name,
+        quizzId: req.body.quizzId,
+        createdBy: req.user.id,
       };
       const room = await roomService.create(roomPayload);
       res.status(201).json(room);

@@ -27,13 +27,16 @@ const connectMongo = async () => {
 };
 
 // Load models
+const Room = room(sequelize);
 const User = user(sequelize);
 const Quizz = quizz(sequelize);
 const Question = question(sequelize);
-const Room = room(sequelize);
 
 // Launch associations methods for relations between tables
 User.associate();
+Quizz.associate();
+Question.associate();
+Room.associate();
 
 export {
   connectMongo,

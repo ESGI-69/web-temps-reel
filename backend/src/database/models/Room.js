@@ -1,13 +1,17 @@
 import { DataTypes, Model } from 'sequelize';
 
+import { Quizz, User } from '../index.js';
+
 /**
  * @param {import('sequelize').Sequelize} connection
  */
 
 export default (connection) => {
   class Room extends Model {
-    static associate({ Quizz }) {
+    static associate() {
       this.belongsTo(Quizz, { foreignKey: 'quizzId' });
+      this.belongsTo(User, { foreignKey: 'createdBy' });
+      this.hasMany(User);
     }
   }
 
@@ -19,21 +23,6 @@ export default (connection) => {
         validate: {
           notEmpty: true,
         },
-      },
-      createdBy: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
-      },
-      quizzId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      code: {
-        type: DataTypes.STRING,
-        allowNull: false,
       },
     },
     {

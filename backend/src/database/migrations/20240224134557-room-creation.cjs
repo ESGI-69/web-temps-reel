@@ -20,8 +20,13 @@ module.exports = {
         allowNull: false,
       },
       createdBy: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
       },
       quizzId: {
         type: Sequelize.INTEGER,
@@ -31,11 +36,6 @@ module.exports = {
           key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-      code: {
-        type: Sequelize.STRING,
-        allowNull: false,
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -48,29 +48,6 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
     });
-
-    await queryInterface.createTable('room_users', {
-      userId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'users',
-          key: 'id',
-        },
-        primaryKey: true,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-      roomId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'rooms',
-          key: 'id',
-        },
-        primaryKey: true,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-    });
   },
 
   async down (queryInterface) {
@@ -81,7 +58,6 @@ module.exports = {
      * await queryInterface.dropTable('users');
      */
 
-    await queryInterface.dropTable('room_users');
     await queryInterface.dropTable('rooms');
   },
 };
