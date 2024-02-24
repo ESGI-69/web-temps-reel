@@ -12,7 +12,7 @@ import { onUnmounted } from 'vue';
 import MyForm from '@/components/MyForm.vue';
 import ConnectionState from '@/components/ConnectionState.vue';
 
-import { socket } from '@/socket.js';
+import { socket, connect } from '@/socket.js';
 import { useRouter } from 'vue-router';
 import { useRoomStore } from '@/stores/roomStore.js';
 import { useQuizzStore } from '@/stores/quizzStore';
@@ -24,7 +24,9 @@ quizzStore.getAllQuizzes();
 const roomStore = useRoomStore();
 const router = useRouter();
 
-const createRoom = (room) => {
+
+const createRoom = async (room) => {
+  await connect();
   if ( room.name ) {
     socket.emit('joinRoom', room);
     socket.emit('getRoomUsers', room.name);
