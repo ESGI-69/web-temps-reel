@@ -30,6 +30,7 @@
     >
       Create a room
     </RouterLink>
+    <JoinRoom />
     <span v-if="!isQuizzesLoading && quizzes.length === 0">
       ⚠️⚠️⚠️ No quizzes found, ask an admin to add some before creating a room ⚠️⚠️⚠️
     </span>
@@ -44,6 +45,7 @@
 import { useAuthStore } from '@/stores/authStore';
 import { useQuizzStore } from '@/stores/quizzStore';
 import { storeToRefs } from 'pinia';
+import JoinRoom from '@/components/JoinRoom.vue';
 
 const authStore = useAuthStore();
 const quizzStore = useQuizzStore();

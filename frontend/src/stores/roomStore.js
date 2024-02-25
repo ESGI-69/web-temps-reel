@@ -49,5 +49,32 @@ export const useRoomStore = defineStore({
         this.isRoomLoading = false;
       }
     },
+    async joinRoom(id) {
+      this.isRoomLoading = true;
+      try {
+        const { data } = await api.get(`/room/${id}/join`);
+        this.room = data;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      } finally {
+        this.isRoomLoading = false;
+      }
+    },
+    async leaveRoom() {
+      this.isRoomLoading = true;
+      try {
+        const { data } = await api.get('/room/leave');
+        this.room = data;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      } finally {
+        this.isRoomLoading = false;
+      }
+    },
+    updateRoomState(room) {
+      this.room = room;
+    },
   },
 });
