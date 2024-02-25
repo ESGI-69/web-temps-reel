@@ -74,6 +74,7 @@ socket.on('messageRoom', messageRoomHandler);
   padding: 5px;
   border-radius: 5px;
   background-color: #e8e8e8;
+  color: black;
 }
 
 form {
