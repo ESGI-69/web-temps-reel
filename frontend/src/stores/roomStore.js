@@ -49,10 +49,14 @@ export const useRoomStore = defineStore({
         this.isRoomLoading = false;
       }
     },
-    async joinRoom(id) {
+    async joinRoom(id, password) {
       this.isRoomLoading = true;
       try {
-        const { data } = await api.get(`/room/${id}/join`);
+        const { data } = await api.patch(`/room/${id}/join`,
+          {
+            password,
+          },
+        );
         this.room = data;
       } catch (error) {
         console.error(error);

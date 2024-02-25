@@ -34,6 +34,20 @@
         type="number"
       >
 
+      <label for="roomPassword">Room password</label>
+      <input
+        id="roomPassword"
+        v-model="room.password"
+        type="password"
+      >
+
+      <label for="roomUserLimits">Room user limits</label>
+      <input
+        id="roomUserLimits"
+        v-model="room.usersLimit"
+        type="number"
+      >
+
       <button
         type="submit"
         :disabled="roomStore.isPostRoomLoading"
@@ -63,6 +77,8 @@ const room = reactive({
   name: '',
   quizzId: '',
   turnDuration: 30,
+  password: null,
+  usersLimit: null,
 });
 
 const onSubmit = async () => {

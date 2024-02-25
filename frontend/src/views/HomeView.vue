@@ -30,7 +30,9 @@
     >
       Create a room
     </RouterLink>
-    <JoinRoom />
+    <JoinRoom
+      v-if="isLogged"
+    />
     <span v-if="!isQuizzesLoading && quizzes.length === 0">
       ⚠️⚠️⚠️ No quizzes found, ask an admin to add some before creating a room ⚠️⚠️⚠️
     </span>

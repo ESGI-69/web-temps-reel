@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
-
 import { Quizz, User } from '../index.js';
+import bcrypt from 'bcryptjs';
 
 /**
  * @param {import('sequelize').Sequelize} connection
@@ -44,11 +44,37 @@ export default (connection) => {
         type: DataTypes.DATE,
         allowNull: true,
       },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      usersLimit: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
     },
     {
       sequelize: connection,
       tableName: 'rooms',
     },
   );
+
+  /**
+   * Encrypt the password before creating or updating the room
+   * @param {Room} room Room model
+   * @param {import('sequelize').UpdateOptions} [options] Update options
+   */
+  const encryptPassword = async (room, options) => {
+    if (!options?.fields.includes('password') || room.password === null) {
+      return;
+    }
+    const salt = await bcrypt.genSalt(10);
+    room.password = await bcrypt.hash(room.password, salt);
+  };
+
+  Room.addHook('beforeCreate', encryptPassword);
+
+  Room.addHook('beforeUpdate', encryptPassword);
+
   return Room;
 };
