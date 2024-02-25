@@ -94,6 +94,17 @@ const leaveRoom = async () => {
 };
 
 socket.on('roomUpdated', (roomUpdated) => {
+  if (room.value.players && room.value.players.length < roomUpdated.players.length) {
+    let newUser = roomUpdated.players[roomUpdated.players.length - 1];
+    if (newUser.id !== profile.value.id) {
+      toasterStore.addToast(`${newUser.username} joined the room`, 'default');
+    }
+  } else if (room.value.players && room.value.players.length > roomUpdated.players.length) {
+    let leftUser = room.value.players.find(player => !roomUpdated.players.some(updatedPlayer => updatedPlayer.id === player.id));
+    if (leftUser && leftUser.id !== profile.value.id) {
+      toasterStore.addToast(`${leftUser.username} left the room`, 'default');
+    }
+  }
   roomStore.updateRoomState(roomUpdated);
 });
 </script>
