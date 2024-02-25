@@ -75,8 +75,6 @@ const leaveRoom = async () => {
 };
 
 socket.on('roomUpdated', (roomUpdated) => {
-  console.log('roomUpdated');
-  console.log(roomUpdated);
   roomStore.updateRoomState(roomUpdated);
 });
 </script>

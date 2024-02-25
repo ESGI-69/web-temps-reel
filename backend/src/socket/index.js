@@ -40,14 +40,7 @@ export const removeUserSocketFromGameRoom = async (user, roomId) => {
 
 export const updateRoom = async (roomId) => {
   const room = await roomService.findById(roomId);
-  console.log(room.toJSON());
-  console.log('EMITTING ROOM UPDATED TO', roomId);
-  try {
-    io.to(roomId).emit('roomUpdated', room);
-    // io.to(roomId).emit('timer', timer);
-  } catch (error) {
-    console.error(error);
-  }
+  io.to(room.id).emit('roomUpdated', room);
 };
 
 export default () => {
