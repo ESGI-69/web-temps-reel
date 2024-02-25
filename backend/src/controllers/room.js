@@ -2,7 +2,6 @@ import roomService from '../services/room.js';
 import userService from '../services/user.js';
 import { updateRoom } from '../socket/index.js';
 import bcrypt from 'bcryptjs';
-// import { joinSocketRoom } from '../socket/index.js';
 
 export default {
   /**
