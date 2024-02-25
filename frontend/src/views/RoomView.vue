@@ -7,6 +7,7 @@
     <template v-else>
       <p>Current room: {{ room.name }} (id: {{ room.id }})</p>
       <p>Question duration: {{ room.turnDuration }}s</p>
+      <ToasterNotif />
       <ConnectionState />
 
       <p>Users in the room:</p>
@@ -61,7 +62,10 @@ import { useAuthStore } from '@/stores/authStore';
 import { onMounted } from 'vue';
 import { socket, connect } from '@/socket.js';
 import ChatWindow from '@/components/ChatWindow.vue';
+import ToasterNotif from '@/components/ToasterNotif.vue';
+import { useToasterStore } from '@/stores/toasterStore.js';
 
+const toasterStore = useToasterStore();
 const roomStore = useRoomStore();
 const authStore = useAuthStore();
 const route = useRoute();
@@ -80,6 +84,7 @@ onMounted(async () => {
   if (!room.value.players.map((player) => player.id).includes(profile.value.id)) {
     router.push({ name: 'home' });
   }
+  toasterStore.addToast('Connected to the room', 'default');
 });
 
 const leaveRoom = async () => {
