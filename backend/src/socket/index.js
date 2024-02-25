@@ -19,24 +19,27 @@ export const asignUserSocketToGameRoom = async (user, roomId) => {
   await socket.join(roomId);
   // eslint-disable-next-line no-console
   console.log(`[Socket ${user.username}] Connected to room ${roomId}`);
+  io.to(roomId).emit('roomUpdated');
 };
 
 /**
  * Remove the user socket from the game room
  * @param {import('../models').User} user
- * @param {string} [gameId] If not provided, the current game of the user will be used
+ * @param {string} [roomId] If not provided, the current game of the user will be used
  */
-export const removeUserSocketFromGameRoom = async (user, gameId) => {
-  if (!user || !gameId) return; // If the user is not in a game, do nothing
+export const removeUserSocketFromGameRoom = async (user, roomId) => {
+  if (!user || !roomId) return; // If the user is not in a game, do nothing
   const socket = users[user.id];
   if (!socket) return; // If the user is not connected, do nothing
-  await socket.leave(gameId);
+  await socket.leave(roomId);
   // eslint-disable-next-line no-console
-  console.log(`[Socket ${user.username}] Disconnected from room ${gameId}`);
+  console.log(`[Socket ${user.username}] Disconnected from room ${roomId}`);
+  io.to(roomId).emit('roomUpdated');
 };
 
 export default () => {
   io.on('connection', async (client) => {
+
     let user;
     const clientJwt = client.handshake.query.token;
 

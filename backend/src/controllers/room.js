@@ -117,4 +117,20 @@ export default {
       next(err);
     }
   },
+
+  /**
+   * Express.js controller for GET /room/leave
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @returns {Promise<void>}
+   */
+  leave: async (req, res, next) => {
+    try {
+      await userService.update({ id: req.user.id }, { RoomId: null });
+      res.sendStatus(204);
+    } catch (err) {
+      next(err);
+    }
+  },
 };

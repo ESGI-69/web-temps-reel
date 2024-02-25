@@ -5,6 +5,7 @@ import { isLogged } from '../middlewares.js';
 const router = Router();
 
 router.get('/', isLogged, roomController.cget);
+router.get('/leave', isLogged, roomController.leave);
 router.get('/:id', isLogged, roomController.get);
 router.get('/:id/join', isLogged, roomController.join);
 router.post('/', isLogged, roomController.post);

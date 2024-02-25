@@ -20,6 +20,11 @@
         </li>
       </ul>
     </template>
+    <button
+      @click="leaveRoom()"
+    >
+      Leave room
+    </button>
   </main>
 </template>
 
@@ -30,7 +35,7 @@ import ConnectionState from '@/components/ConnectionState.vue';
 import { useRoomStore } from '@/stores/roomStore.js';
 import { useAuthStore } from '@/stores/authStore';
 import { onMounted } from 'vue';
-import { connect } from '@/socket.js';
+import { socket, connect } from '@/socket.js';
 
 const roomStore = useRoomStore();
 const authStore = useAuthStore();
@@ -46,5 +51,15 @@ onMounted(async () => {
   if (!room.value.players.map((player) => player.id).includes(profile.value.id)) {
     router.push({ name: 'home' });
   }
+});
+
+const leaveRoom = async () => {
+  await socket.disconnect();
+  await roomStore.leaveRoom();
+  router.push({ name: 'home' });
+};
+
+socket.on('roomUpdated', async () => {
+  await roomStore.getRoom(route.params.id);
 });
 </script>
