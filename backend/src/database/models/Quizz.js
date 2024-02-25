@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-
+import { Question } from '../index.js';
 /**
  * @param {import('sequelize').Sequelize} connection
  */
@@ -7,6 +7,7 @@ import { DataTypes, Model } from 'sequelize';
 export default (connection) => {
   class Quizz extends Model {
     static associate() {
+      this.hasMany(Question, { as: 'questions', foreignKey: 'quizzId' });
     }
   }
 

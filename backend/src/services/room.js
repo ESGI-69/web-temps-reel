@@ -1,4 +1,4 @@
-import { Quizz, Room, User } from './../database/index.js';
+import { Question, Quizz, Room, User } from './../database/index.js';
 
 export default {
 
@@ -22,6 +22,12 @@ export default {
         {
           as: 'quizz',
           model: Quizz,
+          include: [
+            {
+              as: 'questions',
+              model: Question,
+            },
+          ],
         },
         {
           as: 'creator',

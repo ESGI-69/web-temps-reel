@@ -24,6 +24,26 @@ export default (connection) => {
           notEmpty: true,
         },
       },
+      turnDuration: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      turnCount: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
+      },
+      turnStartedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      startedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       sequelize: connection,

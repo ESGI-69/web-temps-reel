@@ -3,13 +3,19 @@
     <h2>ROOM creator</h2>
     <p>Current room : {{ roomStore.roomName }} - {{ roomStore.roomId }}</p>
     <form @submit.prevent="onSubmit">
-      <input v-model="room.name">
+      <label for="name">Room name</label>
+      <input
+        id="name"
+        v-model="room.name"
+      >
 
       <p v-if="isQuizzesLoading">
         Quizzes list loading...
       </p>
 
+      <label for="quizzId">Quizz</label>
       <select
+        id="quizzId"
         v-model="room.quizzId"
       >
         <option
@@ -20,6 +26,13 @@
           {{ quizz.title }}
         </option>
       </select>
+
+      <label from="turnDuration">Question duration in seconds</label>
+      <input
+        id="turnDuration"
+        v-model="room.turnDuration"
+        type="number"
+      >
 
       <button
         type="submit"
@@ -49,6 +62,7 @@ const isQuizzesLoading = computed(() => quizzStore.isQuizzesLoading);
 const room = reactive({
   name: '',
   quizzId: '',
+  turnDuration: 30,
 });
 
 const onSubmit = async () => {
@@ -60,3 +74,11 @@ const onSubmit = async () => {
   }
 };
 </script>
+
+<style>
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+</style>

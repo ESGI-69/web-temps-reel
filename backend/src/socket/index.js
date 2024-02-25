@@ -20,8 +20,7 @@ export const asignUserSocketToGameRoom = async (user, roomId) => {
   await socket.join(roomId);
   // eslint-disable-next-line no-console
   console.log(`[Socket ${user.username}] Connected to room ${roomId}`);
-  const room = await roomService.findById(roomId);
-  io.to(roomId).emit('roomUpdated', room);
+  updateRoom(roomId);
 };
 
 /**
@@ -36,8 +35,19 @@ export const removeUserSocketFromGameRoom = async (user, roomId) => {
   await socket.leave(roomId);
   // eslint-disable-next-line no-console
   console.log(`[Socket ${user.username}] Disconnected from room ${roomId}`);
+  updateRoom(roomId);
+};
+
+export const updateRoom = async (roomId) => {
   const room = await roomService.findById(roomId);
-  io.to(roomId).emit('roomUpdated', room);
+  console.log(room.toJSON());
+  console.log('EMITTING ROOM UPDATED TO', roomId);
+  try {
+    io.to(roomId).emit('roomUpdated', room);
+    // io.to(roomId).emit('timer', timer);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export default () => {
@@ -49,6 +59,12 @@ export default () => {
     jwt.verify(clientJwt, process.env.JWT_SECRET);
     const { id } = jwt.decode(clientJwt);
     user = await userService.findById(id);
+    if (!user) {
+      client.disconnect();
+      // eslint-disable-next-line no-console
+      console.log('[Socket] Unauthorized user');
+      return;
+    }
     users[id] = client;
     // eslint-disable-next-line no-console
     console.log(`[Socket ${user.username}] Connected`);

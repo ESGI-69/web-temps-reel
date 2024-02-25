@@ -5,10 +5,9 @@
       <p>Loading room...</p>
     </template>
     <template v-else>
-      <p>Current room: {{ room.name }} - {{ room.id }}</p>
+      <p>Current room: {{ room.name }} (id: {{ room.id }})</p>
+      <p>Question duration: {{ room.turnDuration }}s</p>
       <ConnectionState />
-
-      <!-- <p>Quizz: {{ roomStore.room.title }}</p> -->
 
       <p>Users in the room:</p>
       <ul v-if="room.players">
@@ -20,12 +19,22 @@
         </li>
       </ul>
       <ChatWindow />
+      <button
+        v-if="!room.startedAt"
+        @click="startGame"
+      >
+        Start game
+      </button>
     </template>
     <button
+      v-if="profile.id === room.ownerId && !room.startedAt"
       @click="leaveRoom()"
     >
       Leave room
     </button>
+    <template v-if="room.startedAt">
+      <p>Game started at: {{ room.startedAt }}</p>
+    </template>
   </main>
 </template>
 
@@ -47,6 +56,10 @@ const router = useRouter();
 const { room, isRoomLoading } = storeToRefs(roomStore);
 const { profile } = storeToRefs(authStore);
 
+const startGame = async () => {
+  await roomStore.startGame(room.value.id);
+};
+
 onMounted(async () => {
   await connect();
   await roomStore.getRoom(route.params.id);
@@ -62,6 +75,8 @@ const leaveRoom = async () => {
 };
 
 socket.on('roomUpdated', (roomUpdated) => {
+  console.log('roomUpdated');
+  console.log(roomUpdated);
   roomStore.updateRoomState(roomUpdated);
 });
 </script>
