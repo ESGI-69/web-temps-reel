@@ -99,4 +99,22 @@ export default {
       next(err);
     }
   },
+
+  /**
+   * Express.js controller for GET /room/:id/join
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @returns {Promise<void>}
+   */
+  join: async (req, res, next) => {
+    try {
+      const room = await roomService.findById(req.params.id);
+      if (!room) return res.sendStatus(404);
+      await userService.update({ id: req.user.id }, { RoomId: room.id });
+      res.json(room);
+    } catch (err) {
+      next(err);
+    }
+  },
 };

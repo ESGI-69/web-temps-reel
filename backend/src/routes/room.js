@@ -6,6 +6,7 @@ const router = Router();
 
 router.get('/', isLogged, roomController.cget);
 router.get('/:id', isLogged, roomController.get);
+router.get('/:id/join', isLogged, roomController.join);
 router.post('/', isLogged, roomController.post);
 router.patch('/:id', isLogged, roomController.patch);
 router.delete('/:id', isLogged, roomController.delete);
