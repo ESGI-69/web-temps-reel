@@ -87,6 +87,7 @@ export default {
         return res.sendStatus(403);
       }
       const roomUpdated = await roomService.update({ id: req.params.id }, req.body);
+      updateRoom(req.params.id);
       res.json(roomUpdated);
     } catch (err) {
       next(err);

@@ -16,9 +16,9 @@
         v-if="profile.id === roomCreatorId"
       >
         <h3>Settings</h3>
-        <p>Time to answer a question (in seconds): </p>
+        <p>Change time to answer a question (in seconds): </p>
         <input
-          v-model="questionsDuration"
+          v-model="turnDuration"
           type="number"
           @change="onQuestionDurationChange"
         >
@@ -93,7 +93,7 @@ const { room, isRoomLoading } = storeToRefs(roomStore);
 const { profile } = storeToRefs(authStore);
 
 const timer = ref(0);
-const questionsDuration = ref(0);
+const turnDuration = ref(0);
 const roomCreatorId = ref('');
 
 const startGame = async () => {
@@ -103,7 +103,7 @@ const startGame = async () => {
 onMounted(async () => {
   await connect();
   await roomStore.getRoom(route.params.id);
-  questionsDuration.value = room.value.questionsDuration;
+  turnDuration.value = room.value.turnDuration;
   if (!room.value.players.map((player) => player.id).includes(profile.value.id)) {
     router.push({ name: 'home' });
   }
@@ -117,7 +117,7 @@ onMounted(async () => {
 const onQuestionDurationChange = async () => {
   await roomStore.updateRoom({
     id: room.value.id,
-    questionsDuration: questionsDuration.value,
+    turnDuration: turnDuration.value,
   });
 };
 
