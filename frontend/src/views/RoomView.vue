@@ -6,9 +6,27 @@
     </template>
     <template v-else>
       <p>Current room: {{ room.name }} (id: {{ room.id }})</p>
-      <p>Question duration: {{ room.turnDuration }}s</p>
       <ToasterNotif />
+      <p>Quizz Global duration : {{ timer }} s</p>
+
       <ConnectionState />
+
+      <!-- <p>Quizz: {{ roomStore.room.title }}</p> -->
+      <div
+        v-if="profile.id === roomCreatorId"
+      >
+        <h3>Settings</h3>
+        <p>Change time to answer a question (in seconds): </p>
+        <input
+          v-model="turnDuration"
+          type="number"
+          @change="onQuestionDurationChange"
+        >
+      </div>
+      <div>
+        <h3>Rules : </h3>
+        <p>Question duration: {{ room.turnDuration }}s</p>
+      </div>
 
       <p>Users in the room:</p>
       <ul v-if="room.players">
@@ -59,11 +77,11 @@ import { useRoute, useRouter } from 'vue-router';
 import ConnectionState from '@/components/ConnectionState.vue';
 import { useRoomStore } from '@/stores/roomStore.js';
 import { useAuthStore } from '@/stores/authStore';
-import { onMounted } from 'vue';
 import { socket, connect } from '@/socket.js';
 import ChatWindow from '@/components/ChatWindow.vue';
 import ToasterNotif from '@/components/ToasterNotif.vue';
 import { useToasterStore } from '@/stores/toasterStore.js';
+import { onMounted, ref, onUnmounted } from 'vue';
 
 const toasterStore = useToasterStore();
 const roomStore = useRoomStore();
@@ -74,6 +92,10 @@ const router = useRouter();
 const { room, isRoomLoading } = storeToRefs(roomStore);
 const { profile } = storeToRefs(authStore);
 
+const timer = ref(0);
+const turnDuration = ref(0);
+const roomCreatorId = ref('');
+
 const startGame = async () => {
   await roomStore.startGame(room.value.id);
 };
@@ -81,10 +103,26 @@ const startGame = async () => {
 onMounted(async () => {
   await connect();
   await roomStore.getRoom(route.params.id);
+  turnDuration.value = room.value.turnDuration;
   if (!room.value.players.map((player) => player.id).includes(profile.value.id)) {
     router.push({ name: 'home' });
   }
   toasterStore.addToast('Connected to the room', 'default');
+  socket.on('timer', (newTimer) => {
+    timer.value = newTimer;
+  });
+  roomCreatorId.value = room.value.creator.id;
+});
+
+const onQuestionDurationChange = async () => {
+  await roomStore.updateRoom({
+    id: room.value.id,
+    turnDuration: turnDuration.value,
+  });
+};
+
+onUnmounted(() => {
+  socket.off('timer');
 });
 
 const leaveRoom = async () => {

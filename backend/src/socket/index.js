@@ -43,6 +43,32 @@ export const updateRoom = async (roomId) => {
   io.to(room.id).emit('roomUpdated', room);
 };
 
+export class Timer {
+  constructor() {
+    this.timers = new Map();
+  }
+
+  start(roomId) {
+    let timer = 0;
+    const intervalId = setInterval(() => {
+      timer++;
+      io.to(roomId).emit('timer', timer);
+    }, 1000); // Update every second
+
+    this.timers.set(roomId, { intervalId, timer });
+  }
+
+  stop(roomId) {
+    const roomTimer = this.timers.get(roomId);
+    if (roomTimer) {
+      clearInterval(roomTimer.intervalId);
+      this.timers.delete(roomId);
+    }
+  }
+}
+
+export const roomTimers = new Timer();
+
 export default () => {
   io.on('connection', async (client) => {
 

@@ -2,6 +2,7 @@ import roomService from '../services/room.js';
 import userService from '../services/user.js';
 import { updateRoom } from '../socket/index.js';
 import bcrypt from 'bcryptjs';
+import { roomTimers } from '../socket/index.js';
 
 export default {
   /**
@@ -64,6 +65,7 @@ export default {
       const room = await roomService.create(roomPayload);
       await userService.update({ id: req.user.id }, { RoomId: room.id });
 
+      roomTimers.start(room.id);
       res.status(201).json(room);
     } catch (err) {
       next(err);
@@ -79,9 +81,14 @@ export default {
    */
   patch: async (req, res, next) => {
     try {
-      const room = await roomService.update({ id: req.params.id }, req.body);
+      const room = await roomService.findById(req.params.id);
       if (!room) return res.sendStatus(404);
-      res.json(room);
+      if (room.createdBy !== req.user.id) {
+        return res.sendStatus(403);
+      }
+      const roomUpdated = await roomService.update({ id: req.params.id }, req.body);
+      updateRoom(req.params.id);
+      res.json(roomUpdated);
     } catch (err) {
       next(err);
     }

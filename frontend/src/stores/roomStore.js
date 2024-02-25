@@ -77,9 +77,24 @@ export const useRoomStore = defineStore({
         this.isRoomLoading = false;
       }
     },
+
+    async updateRoom(room) {
+      this.isPatchRoomLoading = true;
+      try {
+        const { data } = await api.patch(`/room/${room.id}`, room);
+        this.room = data;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      } finally {
+        this.isPatchRoomLoading = false;
+      }
+    },
+
     updateRoomState(room) {
       this.room = room;
     },
+
     async startGame(id) {
       this.isPatchRoomLoading = true;
       try {
