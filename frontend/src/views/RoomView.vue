@@ -94,6 +94,11 @@ const leaveRoom = async () => {
 };
 
 socket.on('roomUpdated', (roomUpdated) => {
+  //notif démarrage de la partie
+  if (room.value.turnStartedAt === null && roomUpdated.turnStartedAt !== null) {
+    toasterStore.addToast('The game has started!', 'default');
+  }
+  //notif joueur rejoint la partie / joueur quitte la partie
   if (room.value.players && room.value.players.length < roomUpdated.players.length) {
     let newUser = roomUpdated.players[roomUpdated.players.length - 1];
     if (newUser.id !== profile.value.id) {
