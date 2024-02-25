@@ -19,6 +19,7 @@
           {{ user.username }}
         </li>
       </ul>
+      <ChatWindow />
     </template>
     <button
       @click="leaveRoom()"
@@ -36,6 +37,7 @@ import { useRoomStore } from '@/stores/roomStore.js';
 import { useAuthStore } from '@/stores/authStore';
 import { onMounted } from 'vue';
 import { socket, connect } from '@/socket.js';
+import ChatWindow from '@/components/ChatWindow.vue';
 
 const roomStore = useRoomStore();
 const authStore = useAuthStore();

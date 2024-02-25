@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import Sequelize from 'sequelize';
 import dotenv from 'dotenv';
 
-import user from './models/user.js';
+import user from './models/User.js';
 import quizz from './models/Quizz.js';
 import question from './models/Question.js';
 import room from './models/Room.js';

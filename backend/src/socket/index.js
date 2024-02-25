@@ -62,3 +62,9 @@ export default () => {
     });
   });
 };
+
+export const sendMessageToRoom = async (room, message) => {
+  if (!room || !message) return; // if the user is not in a game, do nothing
+  //emit to the room the message
+  await io.to(room).emit('messageRoom', message);
+};
