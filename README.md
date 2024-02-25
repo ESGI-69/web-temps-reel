@@ -3,7 +3,7 @@
 ## Contributions de l'équipe
 - Quentin Peltier (timdev0) : Création de quizz et de questions
 - Gatien ANIZAN (mrpinkcat) : Creation de room, init du projet, des bases de données et des sockets
-- Samuel GUENIER (sguenier) : Création de room
+- Samuel GUENIER (sguenier) : Création de room, rejoindre/quitter une room, limite d'utilisateurs + mot de passe sur une room
 - Yohan CENTANNI (ycenta) : Création de room, init des socket
 
 ## Mise en prod
