@@ -1,6 +1,6 @@
 import roomService from '../services/room.js';
 import userService from '../services/user.js';
-// import { joinSocketRoom } from '../socket/index.js';
+import { updateRoom } from '../socket/index.js';
 
 export default {
   /**
@@ -55,6 +55,7 @@ export default {
       const roomPayload = {
         name: req.body.name,
         quizzId: req.body.quizzId,
+        turnDuration: req.body.turnDuration,
         createdBy: req.user.id,
       };
       const room = await roomService.create(roomPayload);
@@ -128,6 +129,24 @@ export default {
   leave: async (req, res, next) => {
     try {
       await userService.update({ id: req.user.id }, { RoomId: null });
+      res.sendStatus(204);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  /**
+   * Express.js controller for PATCH /room/:id/start
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   */
+  start: async (req, res, next) => {
+    try {
+      const room = await roomService.findById(req.params.id);
+      if (!room) return res.sendStatus(404);
+      if (room.createdBy !== req.user.id) return res.sendStatus(403);
+      await roomService.update({ id: req.params.id }, { startedAt: new Date(), turnStartedAt: new Date() });
+      updateRoom(req.params.id);
       res.sendStatus(204);
     } catch (err) {
       next(err);

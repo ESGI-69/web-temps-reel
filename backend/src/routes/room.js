@@ -10,6 +10,7 @@ router.get('/:id', isLogged, roomController.get);
 router.get('/:id/join', isLogged, roomController.join);
 router.post('/', isLogged, roomController.post);
 router.patch('/:id', isLogged, roomController.patch);
+router.patch('/:id/start', isLogged, roomController.start);
 router.delete('/:id', isLogged, roomController.delete);
 
 export default router;
