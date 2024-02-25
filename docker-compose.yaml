@@ -69,4 +69,4 @@ services:
         condition: service_started
     env_file:
       - backend/.env
-      
+    command: ["sh", "start.sh"]

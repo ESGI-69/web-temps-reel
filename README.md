@@ -6,6 +6,19 @@
 - Samuel GUENIER (sguenier) : Création de room, rejoindre/quitter une room, limite d'utilisateurs + mot de passe sur une room
 - Yohan CENTANNI (ycenta) : Création de room, init des socket
 
+## Mise en route du projet
+### .env
+- Dans le dossier backend, créer un fichier .env avec les variables du fichier .env.example
+- Dans le dossier frontend, créer un fichier .env avec les variables du fichier .env.example
+
+### Docker
+- Lancer les containers docker avec la commande `docker-compose up -d` dans le dossier racine du projet
+
+### Compte admin
+Vous pourrez vous connecter avec le compte admin suivant pour tester les fonctionnalités:
+- login : `admin`
+- mot de passe : `admin`
+
 ## Mise en prod
 
 ### Création du namespace

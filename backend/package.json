@@ -11,7 +11,9 @@
     "lint": "eslint src/**/*.js",
     "lint:fix": "eslint src/**/*.js --fix",
     "migrate": "npx sequelize-cli db:migrate",
-    "migrate:force": "node src/migrate.js"
+    "migrate-prod": "NODE_ENV=production npx sequelize-cli db:migrate",
+    "migrate:force": "node src/migrate.js",
+    "seed-prod": "NODE_ENV=production npx sequelize-cli db:seed:all"
   },
   "author": "",
   "license": "ISC",
