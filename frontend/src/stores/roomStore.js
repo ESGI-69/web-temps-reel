@@ -73,5 +73,8 @@ export const useRoomStore = defineStore({
         this.isRoomLoading = false;
       }
     },
+    updateRoomState(room) {
+      this.room = room;
+    },
   },
 });

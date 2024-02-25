@@ -54,12 +54,12 @@ onMounted(async () => {
 });
 
 const leaveRoom = async () => {
-  socket.disconnect();
   await roomStore.leaveRoom();
+  socket.disconnect();
   router.push({ name: 'home' });
 };
 
-socket.on('roomUpdated', async () => {
-  await roomStore.getRoom(route.params.id);
+socket.on('roomUpdated', (roomUpdated) => {
+  roomStore.updateRoomState(roomUpdated);
 });
 </script>

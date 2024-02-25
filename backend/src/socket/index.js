@@ -1,5 +1,6 @@
 import { io } from '../index.js';
 import userService from '../services/user.js';
+import roomService from '../services/room.js';
 import jwt from 'jsonwebtoken';
 
 /**
@@ -19,7 +20,8 @@ export const asignUserSocketToGameRoom = async (user, roomId) => {
   await socket.join(roomId);
   // eslint-disable-next-line no-console
   console.log(`[Socket ${user.username}] Connected to room ${roomId}`);
-  io.to(roomId).emit('roomUpdated');
+  const room = await roomService.findById(roomId);
+  io.to(roomId).emit('roomUpdated', room);
 };
 
 /**
@@ -34,7 +36,8 @@ export const removeUserSocketFromGameRoom = async (user, roomId) => {
   await socket.leave(roomId);
   // eslint-disable-next-line no-console
   console.log(`[Socket ${user.username}] Disconnected from room ${roomId}`);
-  io.to(roomId).emit('roomUpdated');
+  const room = await roomService.findById(roomId);
+  io.to(roomId).emit('roomUpdated', room);
 };
 
 export default () => {
