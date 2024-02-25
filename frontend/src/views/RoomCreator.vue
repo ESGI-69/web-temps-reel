@@ -60,7 +60,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { computed, reactive } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { useQuizzStore } from '@/stores/quizzStore';
 import { useRoomStore } from '@/stores/roomStore';
 
@@ -89,6 +89,12 @@ const onSubmit = async () => {
     console.error(error);
   }
 };
+
+watch(quizzes, (newQuizzes) => {
+  if (newQuizzes.length > 0) {
+    room.quizzId = newQuizzes[0].id;
+  }
+}, { immediate: true });
 </script>
 
 <style>
