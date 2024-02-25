@@ -5,7 +5,9 @@
         v-for="message in chatStore.chatMessages"
         :key="message.id"
       >
-        <p><strong>{{ message.userUsername }}:</strong> {{ message.message }}</p>
+        <p :class="{'warning': message.messageType === 'warning'}">
+          <strong>{{ message.userUsername }}:</strong> {{ message.message }}
+        </p>
       </div>
     </div>
     <form @submit.prevent="send">
@@ -75,6 +77,10 @@ socket.on('messageRoom', messageRoomHandler);
   border-radius: 5px;
   background-color: #e8e8e8;
   color: black;
+}
+.chat-messages .warning {
+  color: red;
+  background-color: #ffdada;
 }
 
 form {
