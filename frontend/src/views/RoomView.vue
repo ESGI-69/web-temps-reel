@@ -7,6 +7,7 @@
     <template v-else>
       <p>Current room: {{ room.name }} (id: {{ room.id }})</p>
       <p>Question duration: {{ room.turnDuration }}s</p>
+      <ToasterNotif />
       <ConnectionState />
 
       <p>Users in the room:</p>
@@ -61,7 +62,10 @@ import { useAuthStore } from '@/stores/authStore';
 import { onMounted } from 'vue';
 import { socket, connect } from '@/socket.js';
 import ChatWindow from '@/components/ChatWindow.vue';
+import ToasterNotif from '@/components/ToasterNotif.vue';
+import { useToasterStore } from '@/stores/toasterStore.js';
 
+const toasterStore = useToasterStore();
 const roomStore = useRoomStore();
 const authStore = useAuthStore();
 const route = useRoute();
@@ -80,6 +84,7 @@ onMounted(async () => {
   if (!room.value.players.map((player) => player.id).includes(profile.value.id)) {
     router.push({ name: 'home' });
   }
+  toasterStore.addToast('Connected to the room', 'default');
 });
 
 const leaveRoom = async () => {
@@ -89,6 +94,17 @@ const leaveRoom = async () => {
 };
 
 socket.on('roomUpdated', (roomUpdated) => {
+  if (room.value.players && room.value.players.length < roomUpdated.players.length) {
+    let newUser = roomUpdated.players[roomUpdated.players.length - 1];
+    if (newUser.id !== profile.value.id) {
+      toasterStore.addToast(`${newUser.username} joined the room`, 'default');
+    }
+  } else if (room.value.players && room.value.players.length > roomUpdated.players.length) {
+    let leftUser = room.value.players.find(player => !roomUpdated.players.some(updatedPlayer => updatedPlayer.id === player.id));
+    if (leftUser && leftUser.id !== profile.value.id) {
+      toasterStore.addToast(`${leftUser.username} left the room`, 'default');
+    }
+  }
   roomStore.updateRoomState(roomUpdated);
 });
 </script>
