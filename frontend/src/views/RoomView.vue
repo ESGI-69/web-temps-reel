@@ -20,20 +20,34 @@
       </ul>
       <ChatWindow />
       <button
-        v-if="!room.startedAt"
+        v-if="!room.startedAt && room.creator?.id === profile.id"
         @click="startGame"
       >
         Start game
       </button>
+      <span v-if="!room.startedAt && room.creator?.id !== profile.id">
+        Waiting for the owner to start the game...
+      </span>
     </template>
     <button
-      v-if="profile.id === room.ownerId && !room.startedAt"
+      v-if="profile.id !== room.creator?.id && !room.startedAt"
       @click="leaveRoom()"
     >
       Leave room
     </button>
     <template v-if="room.startedAt">
       <p>Game started at: {{ room.startedAt }}</p>
+      <p>Question number: {{ room.turnCount + 1 }}</p>
+      <p>Question: {{ room.quizz.questions[room.turnCount].title }}</p>
+      <p>Answers:</p>
+      <ul>
+        <li
+          v-for="answer in room.quizz.questions[room.turnCount].options"
+          :key="answer"
+        >
+          {{ answer }}
+        </li>
+      </ul>
     </template>
   </main>
 </template>
