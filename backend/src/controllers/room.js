@@ -117,8 +117,8 @@ export default {
       const room = await roomService.findById(req.params.id);
       const password = req.body.password;
       if (!room) return res.sendStatus(404);
-      if (room.password && !(await bcrypt.compare(password, room.password))) return res.sendStatus(403);
-      if (room.usersLimit && room.players.length >= room.usersLimit ) return res.sendStatus(403);
+      if (room.password && !(await bcrypt.compare(password, room.password))) return res.status(403).send('Invalid password');
+      if (room.usersLimit && room.players.length >= room.usersLimit ) return res.status(403).send('Room is full');
       await userService.update({ id: req.user.id }, { RoomId: room.id });
       res.json(room);
     } catch (err) {

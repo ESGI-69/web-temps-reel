@@ -75,7 +75,7 @@ const onSubmit = async () => {
       errorMessage.value = 'No room found with this code';
       isFormValid.value = false;
     } else if (error.response.status === 403) {
-      errorMessage.value = 'The room is full or the password is invalid';
+      errorMessage.value = error.response.data;
       isFormValid.value = false;
     }
   }
