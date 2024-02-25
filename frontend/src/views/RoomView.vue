@@ -6,7 +6,6 @@
     </template>
     <template v-else>
       <p>Current room: {{ room.name }} (id: {{ room.id }})</p>
-      <p>Question duration: {{ room.turnDuration }}s</p>
       <ToasterNotif />
       <p>Quizz Global duration : {{ timer }} s</p>
 
@@ -24,9 +23,10 @@
           @change="onQuestionDurationChange"
         >
       </div>
-
-      <h3>Rules : </h3>
-      <p>Time to answer the questions : {{ questionsDuration }} </p>
+      <div>
+        <h3>Rules : </h3>
+        <p>Question duration: {{ room.turnDuration }}s</p>
+      </div>
 
       <p>Users in the room:</p>
       <ul v-if="room.players">
