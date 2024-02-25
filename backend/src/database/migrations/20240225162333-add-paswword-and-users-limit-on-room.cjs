@@ -9,14 +9,13 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addColumn('users', 'RoomId', {
+    await queryInterface.addColumn('rooms', 'password', {
+      type: Sequelize.STRING,
+      allowNull: true,
+    });
+    await queryInterface.addColumn('rooms', 'usersLimit', {
       type: Sequelize.INTEGER,
       allowNull: true,
-      references: {
-        model: 'rooms',
-        key: 'id',
-      },
-      onUpdate: 'CASCADE',
     });
   },
 
@@ -27,6 +26,7 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.removeColumn('users', 'RoomId');
+    await queryInterface.removeColumn('rooms', 'password');
+    await queryInterface.removeColumn('rooms', 'usersLimit');
   },
 };

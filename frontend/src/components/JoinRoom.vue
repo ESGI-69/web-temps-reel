@@ -19,6 +19,12 @@
         v-model="roomCode"
         type="text"
       >
+      <label for="roomPassword">Room password</label>
+      <input
+        id="roomPassword"
+        v-model="roomPassword"
+        type="password"
+      >
       <button
         type="submit"
         :disabled="isRoomLoading"
@@ -45,6 +51,7 @@ const roomStore = useRoomStore();
 const router = useRouter();
 
 const roomCode = ref('');
+const roomPassword = ref('');
 const isModalOpen = ref(false);
 const isFormValid = ref(true);
 const errorMessage = ref('Room code is required');
@@ -58,14 +65,19 @@ const onSubmit = async () => {
   }
 
   try {
-    await roomStore.joinRoom(roomCode.value);
+    await roomStore.joinRoom(roomCode.value, roomPassword.value);
     isModalOpen.value = false;
     roomCode.value = '';
     isFormValid.value = true;
     router.push(`/room/${roomStore.room.id}`);
   } catch (error) {
-    errorMessage.value = 'No room found with this code';
-    isFormValid.value = false;
+    if ( error.response.status === 404) {
+      errorMessage.value = 'No room found with this code';
+      isFormValid.value = false;
+    } else if (error.response.status === 403) {
+      errorMessage.value = 'The room is full or the password is invalid';
+      isFormValid.value = false;
+    }
   }
 };
 </script>

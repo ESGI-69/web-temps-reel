@@ -1,6 +1,8 @@
 import roomService from '../services/room.js';
 import userService from '../services/user.js';
 import { updateRoom } from '../socket/index.js';
+import bcrypt from 'bcryptjs';
+// import { joinSocketRoom } from '../socket/index.js';
 
 export default {
   /**
@@ -57,6 +59,8 @@ export default {
         quizzId: req.body.quizzId,
         turnDuration: req.body.turnDuration,
         createdBy: req.user.id,
+        password: req.body.password,
+        usersLimit: req.body.usersLimit,
       };
       const room = await roomService.create(roomPayload);
       await userService.update({ id: req.user.id }, { RoomId: room.id });
@@ -102,7 +106,7 @@ export default {
   },
 
   /**
-   * Express.js controller for GET /room/:id/join
+   * Express.js controller for PATCH /room/:id/join
    * @param {import('express').Request} req
    * @param {import('express').Response} res
    * @param {import('express').NextFunction} next
@@ -111,7 +115,10 @@ export default {
   join: async (req, res, next) => {
     try {
       const room = await roomService.findById(req.params.id);
+      const password = req.body.password;
       if (!room) return res.sendStatus(404);
+      if (room.password && !(await bcrypt.compare(password, room.password))) return res.sendStatus(403);
+      if (room.usersLimit && room.players.length >= room.usersLimit ) return res.sendStatus(403);
       await userService.update({ id: req.user.id }, { RoomId: room.id });
       res.json(room);
     } catch (err) {
