@@ -1,5 +1,7 @@
 FROM node:lts-alpine
 
+ARG VITE_API_DOMAIN
+ENV VITE_API_DOMAIN=$VITE_API_DOMAIN
 ARG VITE_API
 ENV VITE_API=$VITE_API
 ARG VITE_API_TIMEOUT
@@ -8,13 +10,8 @@ ARG VITE_COOKIE_TOKEN_NAME
 ENV VITE_COOKIE_TOKEN_NAME=$VITE_COOKIE_TOKEN_NAME
 ARG VITE_LAST_COMMIT
 ENV VITE_LAST_COMMIT=$VITE_LAST_COMMIT
-
-# install git
-RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh
-
-# install simple http server for serving static content
-RUN npm install -g http-server
+ARG VITE_SOCKET
+ENV VITE_SOCKET=$VITE_SOCKET
 
 # Create app directory
 WORKDIR /app
@@ -31,4 +28,5 @@ RUN npm run build
 
 # Expose port and start application
 EXPOSE 8080
-CMD ["http-server", "-c-1", "--proxy", "http://localhost:8080?", "dist"]
+
+CMD ["npm", "run", "preview"]
