@@ -27,13 +27,16 @@ export default {
         messageType: 'default',
       };
 
-      //find if the message content is the same as the answer of the current question of the quizz
-      const quizz = await quizzService.findById(req.body.quizzId);
-      // if (quizz.currentQuestion.answer === req.body.text) {
-      //   //replace the message content with "Pas de triche !!"
-      //   chatPayload.message = 'Pas de triche !!';
-      //   chatPayload.messageType = 'warning';
-      // }
+      const quizz = await quizzService.findAll({ id: quizzId }, { include: 'questions' });
+      const turnNumber = user.currentRoom.turnCount;
+      //check if the quizz.questions[turnNumber].options contains the message content
+      const question = quizz[0].questions[turnNumber];
+      if (question.options.map(option => option.toLowerCase()).includes(req.body.text.toLowerCase())) {
+        //replace the message content with "Pas de triche !!"
+        chatPayload.message = 'Pas de triche !!';
+        chatPayload.messageType = 'warning';
+      }
+
       sendMessageToRoom(user.currentRoom.id, chatPayload);
       res.status(201).json('ok');
     } catch (err) {
