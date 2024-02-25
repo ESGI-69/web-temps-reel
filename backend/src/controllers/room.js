@@ -66,7 +66,6 @@ export default {
       await userService.update({ id: req.user.id }, { RoomId: room.id });
 
       roomTimers.start(room.id);
-      console.log('Room created', room.id);
       res.status(201).json(room);
     } catch (err) {
       next(err);

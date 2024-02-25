@@ -82,7 +82,6 @@ import ChatWindow from '@/components/ChatWindow.vue';
 import ToasterNotif from '@/components/ToasterNotif.vue';
 import { useToasterStore } from '@/stores/toasterStore.js';
 import { onMounted, ref, onUnmounted } from 'vue';
-import { connect, socket } from '@/socket.js';
 
 const toasterStore = useToasterStore();
 const roomStore = useRoomStore();
