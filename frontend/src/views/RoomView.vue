@@ -54,7 +54,7 @@ onMounted(async () => {
 });
 
 const leaveRoom = async () => {
-  await socket.disconnect();
+  socket.disconnect();
   await roomStore.leaveRoom();
   router.push({ name: 'home' });
 };
