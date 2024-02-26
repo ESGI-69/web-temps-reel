@@ -9,7 +9,7 @@
 ## Mise en route du projet
 
 ### Docker
-- Lancer les containers docker avec la commande `docker-compose up -d` dans le dossier racine du projet
+- Lancer les containers docker avec la commande `docker-compose up -d --build` dans le dossier racine du projet
 
 ### Accès à l'application
 - L'application est accessible à l'adresse `http://localhost:8080`
