@@ -1,6 +1,6 @@
 import roomService from '../services/room.js';
 import userService from '../services/user.js';
-import { roomCountdowns, roomTimers, sendIsCorrect, updateRoom } from '../socket/index.js';
+import { roomTimers, sendIsCorrect, updateRoom } from '../socket/index.js';
 import bcrypt from 'bcryptjs';
 import roomUserQuestionsAnswersService from '../services/roomUserQuestionsAnswers.js';
 
