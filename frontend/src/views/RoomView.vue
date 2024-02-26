@@ -1,5 +1,7 @@
 <template>
   <ChatWindow />
+  <ScoreBoard />
+
   <main :class="{ shake: isShaking }">
     <h2>ROOM view</h2>
     <template v-if="isRoomLoading">
@@ -93,6 +95,8 @@ import ChatWindow from '@/components/ChatWindow.vue';
 import ToasterNotif from '@/components/ToasterNotif.vue';
 import { useToasterStore } from '@/stores/toasterStore.js';
 import { onMounted, ref, onUnmounted, computed, watch } from 'vue';
+import ScoreBoard from '@/components/ScoreBoard.vue';
+
 
 const toasterStore = useToasterStore();
 const roomStore = useRoomStore();
@@ -169,7 +173,7 @@ socket.on('roomUpdated', (roomUpdated) => {
   } else if (room.value.players && room.value.players.length > roomUpdated.players.length) {
     let leftUser = room.value.players.find(player => !roomUpdated.players.some(updatedPlayer => updatedPlayer.id === player.id));
     if (leftUser && leftUser.id !== profile.value.id) {
-      toasterStore.addToast(`${leftUser.username} left the room`, 'default');
+      toasterStore.addToast(`${leftUser.username} left the room`, 'warning');
     }
   }
   roomStore.updateRoomState(roomUpdated);

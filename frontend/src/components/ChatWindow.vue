@@ -81,7 +81,9 @@ socket.on('love', emojiRoomHandler);
   background-color: #f8f8f8;
   position: absolute;
   bottom: 5%;
-  right: 5%;
+  right: 10%;
+  width: 20%;
+  z-index: 2;
 }
 
 .chat-messages {
@@ -97,6 +99,8 @@ socket.on('love', emojiRoomHandler);
   border-radius: 5px;
   background-color: #e8e8e8;
   color: black;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 .chat-messages .warning {
   color: red;
