@@ -201,6 +201,8 @@ export default {
         answerIndex: req.body.answerIndex,
         score: score,
       });
+
+      await req.user.increment('xp', { by: score });
       updateRoom(req.params.id);
       sendIsCorrect(isCorrect, user.id, score);
       res.sendStatus(204);
