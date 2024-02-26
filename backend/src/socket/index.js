@@ -121,36 +121,3 @@ export const sendMessageToRoom = async (room, message) => {
     await io.to(room).emit('messageRoom', message);
   }
 };
-
-export class Countdown {
-  constructor() {
-    this.countdowns = new Map();
-  }
-
-  start(roomId, duration) {
-    let countdown = duration;
-    const intervalId = setInterval(() => {
-      countdown--;
-      io.to(roomId).emit('countdown', countdown);
-      if (countdown <= 0) {
-        this.stop(roomId);
-      }
-    }, 1000); // Update every second
-
-    this.countdowns.set(roomId, { intervalId, countdown });
-  }
-
-  restart(roomId, duration) {
-    this.start(roomId, duration);
-  }
-
-  stop(roomId) {
-    const roomCountdown = this.countdowns.get(roomId);
-    if (roomCountdown) {
-      clearInterval(roomCountdown.intervalId);
-      this.countdowns.delete(roomId);
-    }
-  }
-}
-
-export const roomCountdowns = new Countdown();
