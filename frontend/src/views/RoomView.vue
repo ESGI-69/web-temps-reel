@@ -75,7 +75,16 @@
         </div>
       </div>
       <p>Answers allready recived: {{ currentQuestionAnswers.length }}/{{ room.players.length }}</p>
-      <p>Time left to answer: {{ timeLeft }}s</p>
+      <p
+        v-if="room.turnCount + 1 !== room.quizz.questions.length"
+      >
+        Time left to answer: {{ timeLeft }}s
+      </p>
+      <p
+        v-else
+      >
+        Quizz done !!
+      </p>
     </template>
   </main>
 </template>
