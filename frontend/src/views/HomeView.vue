@@ -54,6 +54,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useQuizzStore } from '@/stores/quizzStore';
 import { useRoomStore } from '@/stores/roomStore';
 import { storeToRefs } from 'pinia';
+import { socket, connect } from '@/socket.js';
 import JoinRoom from '@/components/JoinRoom.vue';
 
 const authStore = useAuthStore();
@@ -66,7 +67,9 @@ const { isLogged, isAdmin, profile } = storeToRefs(authStore);
 const { quizzes, isQuizzesLoading } = storeToRefs(quizzStore);
 
 const leaveRoom = async () => {
+  await connect();
   await roomStore.leaveRoom();
   await authStore.getProfile();
+  socket.disconnect();
 };
 </script>
