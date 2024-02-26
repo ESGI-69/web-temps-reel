@@ -6,6 +6,19 @@
 - Samuel GUENIER (sguenier) : Création de room, rejoindre/quitter une room, limite d'utilisateurs + mot de passe sur une room
 - Yohan CENTANNI (ycenta) : Création de room, init des socket
 
+## Mise en route du projet
+
+### Docker
+- Lancer les containers docker avec la commande `docker-compose up -d` dans le dossier racine du projet
+
+### Accès à l'application
+- L'application est accessible à l'adresse `http://localhost:8080`
+
+### Compte admin
+Vous pourrez vous connecter avec le compte admin suivant pour tester les fonctionnalités:
+- login : `admin`
+- mot de passe : `admin`
+
 ## Mise en prod
 
 ### Création du namespace
