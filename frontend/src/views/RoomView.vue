@@ -67,7 +67,7 @@
           class="answer"
           :class="{
             disabled: myAnswerIndex !== null,
-            selected: myAnswerIndex === currentQuestion.options.indexOf(answer)
+            selected: myAnswerIndex === index
           }"
           @click="onAnswerClick(index)"
         >
@@ -116,7 +116,7 @@ const currentQuestionAnswers = computed(() => room.value.questionsAnswers.filter
 
 const myAnswerIndex = computed(() => {
   const answer = currentQuestionAnswers.value.find((questionAnswer) => questionAnswer.userId === profile.value.id);
-  return answer?.id || null;
+  return answer?.answerIndex ?? null;
 });
 
 onMounted(async () => {
@@ -184,6 +184,14 @@ socket.on('wizz', () => {
 const onAnswerClick = async (answerIndex) => {
   await roomStore.answerCurrentQuestion(room.value.id, answerIndex);
 };
+
+socket.on('answerResult', (isCorrect, score) => {
+  if (isCorrect) {
+    toasterStore.addToast(`Correct answer, you won  ${score} points`, 'success');
+  } else {
+    toasterStore.addToast('Wrong answer', 'error');
+  }
+});
 </script>
 
 <style>

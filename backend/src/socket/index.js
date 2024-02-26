@@ -1,6 +1,7 @@
 import { io } from '../index.js';
 import userService from '../services/user.js';
 import roomService from '../services/room.js';
+import questionService from '../services/question.js';
 import jwt from 'jsonwebtoken';
 
 /**
@@ -36,6 +37,12 @@ export const removeUserSocketFromGameRoom = async (user, roomId) => {
   // eslint-disable-next-line no-console
   console.log(`[Socket ${user.username}] Disconnected from room ${roomId}`);
   updateRoom(roomId);
+};
+
+export const sendIsCorrect = (isCorrect, userId, score) => {
+  const client = users[userId];
+  if (!client) return;
+  client.emit('answerResult', isCorrect, score);
 };
 
 export const updateRoom = async (roomId) => {
@@ -95,6 +102,7 @@ export default () => {
       console.log('[Socket] disconnected');
       delete users[client.id];
     });
+
   });
 };
 
