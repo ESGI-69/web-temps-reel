@@ -1,8 +1,8 @@
 # Web Temps Réel
 
 ## Contributions de l'équipe
-- Quentin Peltier (timdev0) : Création de quizz et de questions, gestion des timers
-- Gatien ANIZAN (mrpinkcat) : Creation de room, init du projet, des bases de données et des sockets
+- Quentin Peltier (timdev0) : Création de quizz et de questions, gestion des timers, dockerisation
+- Gatien ANIZAN (mrpinkcat) : Creation de room, init du projet, des bases de données et des sockets, dockerisation
 - Samuel GUENIER (sguenier) : Création de room, rejoindre/quitter une room, limite d'utilisateurs + mot de passe sur une room
 - Yohan CENTANNI (ycenta) : Création de room, init des socket
 
@@ -15,7 +15,7 @@
 - L'application est accessible à l'adresse `http://localhost:8080`
 
 ### Compte admin
-Vous pourrez vous connecter avec le compte admin suivant pour tester les fonctionnalités:
+Vous pourrez vous connecter avec le compte admin suivant pour tester les fonctionnalités admin:
 - login : `admin`
 - mot de passe : `admin`
 

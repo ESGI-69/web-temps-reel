@@ -75,6 +75,9 @@
         </div>
       </div>
       <p>Answers allready recived: {{ currentQuestionAnswers.length }}/{{ room.players.length }}</p>
+      <p>
+        Time left to answer: {{ timeLeft }}s
+      </p>
     </template>
   </main>
 </template>
@@ -89,7 +92,7 @@ import { socket, connect } from '@/socket.js';
 import ChatWindow from '@/components/ChatWindow.vue';
 import ToasterNotif from '@/components/ToasterNotif.vue';
 import { useToasterStore } from '@/stores/toasterStore.js';
-import { onMounted, ref, onUnmounted, computed } from 'vue';
+import { onMounted, ref, onUnmounted, computed, watch } from 'vue';
 
 const toasterStore = useToasterStore();
 const roomStore = useRoomStore();
@@ -103,6 +106,8 @@ const { profile } = storeToRefs(authStore);
 const timer = ref(0);
 const turnDuration = ref(0);
 const roomCreatorId = ref('');
+const timeLeft = ref(0);
+const intervalId = ref(null);
 
 const isShaking = ref(false);
 
@@ -190,6 +195,32 @@ socket.on('answerResult', (isCorrect, score) => {
     toasterStore.addToast(`Correct answer, you won  ${score} points`, 'success');
   } else {
     toasterStore.addToast('Wrong answer', 'error');
+  }
+});
+
+socket.on('countdown', (newCountdown) => {
+  timeLeft.value = newCountdown;
+});
+
+const calculateTimeLeft = () => {
+  const now = Date.now();
+  const turnStartedAt = new Date(room.value.turnStartedAt).getTime();
+  const turnEndsAt = turnStartedAt + room.value.turnDuration * 1000;
+  timeLeft.value = Math.max(Math.floor((turnEndsAt - now) / 1000), 0);
+  if (timeLeft.value === 0) {
+    clearInterval(intervalId.value);
+  }
+};
+const startCountdown = () => {
+  if (intervalId.value) {
+    clearInterval(intervalId);
+  }
+  intervalId.value = setInterval(calculateTimeLeft, 1000);
+};
+
+watch(() => room.value.turnStartedAt, (newVal, oldVal) => {
+  if (newVal !== oldVal && newVal !== null) {
+    startCountdown();
   }
 });
 </script>
