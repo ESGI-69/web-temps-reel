@@ -1,7 +1,6 @@
 import { io } from '../index.js';
 import userService from '../services/user.js';
 import roomService from '../services/room.js';
-import questionService from '../services/question.js';
 import jwt from 'jsonwebtoken';
 
 /**
