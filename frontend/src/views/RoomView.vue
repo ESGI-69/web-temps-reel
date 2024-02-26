@@ -190,10 +190,10 @@ const onAnswerClick = async (answerIndex) => {
   await roomStore.answerCurrentQuestion(room.value.id, answerIndex);
 };
 
-socket.on('answerResult', (isCorrect) => {
+socket.on('answerResult', (answer) => {
   alreadyAnswered.value = true;
-  if (isCorrect) {
-    toasterStore.addToast('Correct answer', 'success');
+  if (answer.isCorrect) {
+    toasterStore.addToast(`Correct answer, you won  ${answer.score} points`, 'success');
   } else {
     toasterStore.addToast('Wrong answer', 'error');
   }
