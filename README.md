@@ -7,12 +7,12 @@
 - Yohan CENTANNI (ycenta) : Création de room, init des socket
 
 ## Mise en route du projet
-### .env
-- Dans le dossier backend, créer un fichier .env avec les variables du fichier .env.example
-- Dans le dossier frontend, créer un fichier .env avec les variables du fichier .env.example
 
 ### Docker
 - Lancer les containers docker avec la commande `docker-compose up -d` dans le dossier racine du projet
+
+### Accès à l'application
+- L'application est accessible à l'adresse `http://localhost:8080`
 
 ### Compte admin
 Vous pourrez vous connecter avec le compte admin suivant pour tester les fonctionnalités:
