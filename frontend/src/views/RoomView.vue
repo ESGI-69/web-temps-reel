@@ -145,4 +145,8 @@ socket.on('roomUpdated', (roomUpdated) => {
   }
   roomStore.updateRoomState(roomUpdated);
 });
+
+socket.on('timeRunningOut', () => {
+  toasterStore.addToast('Time is running out!', 'warning');
+});
 </script>
