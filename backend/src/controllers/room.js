@@ -169,6 +169,7 @@ export default {
       if (room.createdBy !== req.user.id) return res.sendStatus(403);
       await roomService.update({ id: req.params.id }, { startedAt: new Date(), turnStartedAt: new Date() });
       updateRoom(req.params.id);
+      roomService.startTimer(room);
       res.sendStatus(204);
     } catch (err) {
       next(err);

@@ -215,6 +215,7 @@ const startCountdown = () => {
   }
   intervalId.value = setInterval(calculateTimeLeft, 1000);
 };
+
 watch(() => room.value.turnStartedAt, (newVal, oldVal) => {
   if (newVal !== oldVal && newVal !== null) {
     startCountdown();

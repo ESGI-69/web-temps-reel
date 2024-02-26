@@ -1,4 +1,8 @@
 import { Question, Quizz, Room, RoomUserQuestionsAnswers, User } from './../database/index.js';
+import { updateRoom } from '../socket/index.js';
+import questionService from './question.js';
+
+let roomTurnTimeouts = {};
 
 export default {
 
@@ -78,5 +82,28 @@ export default {
     return Room.destroy({
       where: criteria,
     });
+  },
+
+  startTimer: function (room) {
+    if (roomTurnTimeouts[room.id]) {
+      clearTimeout(roomTurnTimeouts[room.id]);
+    }
+    roomTurnTimeouts[room.id] = setTimeout(() => {
+      this.changeTurnCount(room);
+    }, room.turnDuration * 1000);
+  },
+
+  changeTurnCount: async function (room) {
+    const questions = await questionService.findAll({ quizzId: room.quizzId });
+    console.log('questions', questions);
+    if (room.turnCount + 1 < questions.length) {
+      const updatedRoom = await this.update({ id: room.id }, { turnCount: room.turnCount + 1, turnStartedAt: new Date() });
+      console.log('updatedRoom', updatedRoom);
+      updateRoom(updatedRoom.id);
+      this.startTimer(updatedRoom);
+    } else {
+      this.update({ id: room.id }, { turnStartedAt: null });
+      updateRoom(room.id);
+    }
   },
 };
