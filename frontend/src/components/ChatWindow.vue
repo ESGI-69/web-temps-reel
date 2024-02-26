@@ -83,6 +83,7 @@ socket.on('love', emojiRoomHandler);
   bottom: 5%;
   right: 10%;
   width: 20%;
+  z-index: 2;
 }
 
 .chat-messages {

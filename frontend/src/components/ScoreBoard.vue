@@ -6,7 +6,7 @@
         v-for="player in sortedPlayers"
         :key="player.id"
       >
-        {{ player.username }}: {{ player.score }}
+        {{ player.username }}: {{ player.totalScore }}
       </li>
     </ul>
   </div>
@@ -18,12 +18,14 @@ import { computed } from 'vue';
 
 const roomStore = useRoomStore();
 const sortedPlayers = computed(() => {
-  //Need ajouter dans le roomStore.room.players le .score !
   if (roomStore.room && roomStore.room.players) {
-    return [ ...roomStore.room.players ].sort((a, b) => b.score - a.score);
+    return roomStore.room.players.map(player => {
+      const playerAnswers = roomStore.room.questionsAnswers.filter(answer => answer.userId === player.id);
+      const totalScore = playerAnswers.reduce((sum, answer) => sum + answer.score, 0);
+      return { ...player, totalScore };
+    }).sort((a, b) => b.totalScore - a.totalScore);
   }
   return [];
-
 });
 </script>
 
@@ -36,7 +38,8 @@ const sortedPlayers = computed(() => {
   height: 100%;
   padding: 20px;
   box-sizing: border-box;
-  background-color: #f8f8f8;
+  background-color: #777;
+  color: #fff;
   border-left: 1px solid #ccc;
   overflow-y: auto;
 }

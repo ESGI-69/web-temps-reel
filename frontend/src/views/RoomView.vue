@@ -1,5 +1,7 @@
 <template>
   <ChatWindow />
+  <ScoreBoard />
+
   <main :class="{ shake: isShaking }">
     <h2>ROOM view</h2>
     <template v-if="isRoomLoading">
@@ -11,7 +13,6 @@
       <p>Quizz Global duration : {{ timer }} s</p>
 
       <ConnectionState />
-      <ScoreBoard />
 
       <!-- <p>Quizz: {{ roomStore.room.title }}</p> -->
       <div
