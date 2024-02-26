@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import userService from './services/user.js';
 import { users } from './socket/index.js';
+import roomService from './services/room.js';
 
 /**
  * User population middleware. This middleware will populate the user in the request object from the JWT token.
@@ -73,7 +74,7 @@ const isUserInRoom = (req, res, next) => {
   next();
 };
 
-const isUserRoomStarted = (req, res, next) => {
+const isUserRoomStarted = async (req, res, next) => {
   if (!req.user) return res.status(401).send({
     code: 'not_logged_in',
     message: 'Not logged in',
@@ -82,7 +83,8 @@ const isUserRoomStarted = (req, res, next) => {
     code: 'not_in_room',
     message: 'Not in room',
   });
-  if (!req.user.Room.startedAt) return res.status(403).send({
+  const room = await roomService.findById(req.user.RoomId);
+  if (!room.startedAt) return res.status(403).send({
     code: 'room_not_started',
     message: 'Room not started',
   });

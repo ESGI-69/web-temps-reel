@@ -175,7 +175,7 @@ export default {
       if (!user) return res.sendStatus(404);
       if (user.RoomId !== room.id) return res.status(403).send('Not in the room');
       if (req.body.answerIndex === undefined) return res.status(400).send('answerIndex is required');
-      const currentQuestion = room.quizz.questions[room.currentQuestion];
+      const currentQuestion = room.quizz.questions[room.turnCount];
       await roomUserQuestionsAnswersService.create({
         roomId: room.id,
         userId: user.id,
@@ -183,6 +183,7 @@ export default {
         answerIndex: req.body.answerIndex,
       });
       updateRoom(req.params.id);
+      res.sendStatus(204);
     } catch (err) {
       next(err);
     }
