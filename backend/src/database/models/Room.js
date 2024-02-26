@@ -53,6 +53,10 @@ export default (connection) => {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      endedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       sequelize: connection,

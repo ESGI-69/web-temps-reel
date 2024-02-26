@@ -56,7 +56,7 @@
     >
       Leave room
     </button>
-    <template v-if="room.startedAt">
+    <template v-if="room.startedAt && !room.endedAt">
       <p>Game started at: {{ room.startedAt }}</p>
       <p>Question number: {{ room.turnCount + 1 }}</p>
       <p class="bold">
@@ -80,6 +80,11 @@
       <p>
         Time left to answer: {{ timeLeft }}s
       </p>
+    </template>
+    <template v-else-if="room.endedAt">
+      <p>---</p>
+      <p>Game ended at: {{ room.endedAt }}</p>
+      <p>See the scoreboards for the results</p>
     </template>
   </main>
 </template>
