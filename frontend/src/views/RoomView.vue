@@ -67,7 +67,7 @@
           class="answer"
           :class="{
             disabled: myAnswerIndex !== null,
-            selected: myAnswerIndex === currentQuestion.options.indexOf(answer)
+            selected: myAnswerIndex === index
           }"
           @click="onAnswerClick(index)"
         >
@@ -103,7 +103,6 @@ const { profile } = storeToRefs(authStore);
 const timer = ref(0);
 const turnDuration = ref(0);
 const roomCreatorId = ref('');
-const alreadyAnswered = ref(false);
 
 const isShaking = ref(false);
 
@@ -117,7 +116,7 @@ const currentQuestionAnswers = computed(() => room.value.questionsAnswers.filter
 
 const myAnswerIndex = computed(() => {
   const answer = currentQuestionAnswers.value.find((questionAnswer) => questionAnswer.userId === profile.value.id);
-  return answer?.id || null;
+  return answer?.answerIndex ?? null;
 });
 
 onMounted(async () => {
@@ -139,10 +138,6 @@ const onQuestionDurationChange = async () => {
     id: room.value.id,
     turnDuration: turnDuration.value,
   });
-};
-
-const sendAnswer = async (idAnswer, idQuestion) => {
-  socket.emit('checkAnswer', idAnswer, idQuestion);
 };
 
 onUnmounted(() => {
@@ -190,10 +185,9 @@ const onAnswerClick = async (answerIndex) => {
   await roomStore.answerCurrentQuestion(room.value.id, answerIndex);
 };
 
-socket.on('answerResult', (answer) => {
-  alreadyAnswered.value = true;
-  if (answer.isCorrect) {
-    toasterStore.addToast(`Correct answer, you won  ${answer.score} points`, 'success');
+socket.on('answerResult', (isCorrect, score) => {
+  if (isCorrect) {
+    toasterStore.addToast(`Correct answer, you won  ${score} points`, 'success');
   } else {
     toasterStore.addToast('Wrong answer', 'error');
   }

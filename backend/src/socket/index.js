@@ -39,24 +39,10 @@ export const removeUserSocketFromGameRoom = async (user, roomId) => {
   updateRoom(roomId);
 };
 
-export const checkAnswer = async (idAnswer, idQuestion, client, idRoom) => {
-  const question = await questionService.findById(idQuestion);
-  const isCorrect = question.answer === idAnswer;
-  let timeAnswered = Date.now();
-  //get current room.turnDuration and room.turnStartedAt
-  const room = await roomService.findById(idRoom);
-  if (!room) return;
-  const score = calculateScore(room.turnStartedAt, timeAnswered, room.turnDuration);
-  client.emit('answerResult', { isCorrect, score });
-};
-
-export const calculateScore = (timeStarted, timeAnswered, duration) => {
-  //duration provient de room.turnDuration
-  const timeTaken = (timeAnswered - timeStarted ) / 1000;
-  if (timeTaken > duration) return 0;
-  const remainingTimePercentage = ((duration - timeTaken) / duration) * 100;
-  const score = (remainingTimePercentage / 100) * 100;
-  return Math.round(score);
+export const sendIsCorrect = (isCorrect, userId, score) => {
+  const client = users[userId];
+  if (!client) return;
+  client.emit('answerResult', isCorrect, score);
 };
 
 export const updateRoom = async (roomId) => {
@@ -115,10 +101,6 @@ export default () => {
       // eslint-disable-next-line no-console
       console.log('[Socket] disconnected');
       delete users[client.id];
-    });
-
-    client.on('checkAnswer', (idAnswer, idQuestion) => {
-      checkAnswer(idAnswer, idQuestion, client, user.currentRoom?.id);
     });
 
   });

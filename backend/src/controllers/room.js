@@ -1,9 +1,18 @@
 import roomService from '../services/room.js';
 import userService from '../services/user.js';
-import { updateRoom } from '../socket/index.js';
+import { sendIsCorrect, updateRoom } from '../socket/index.js';
 import bcrypt from 'bcryptjs';
 import { roomTimers } from '../socket/index.js';
 import roomUserQuestionsAnswersService from '../services/roomUserQuestionsAnswers.js';
+
+export const calculateScore = (timeStarted, timeAnswered, duration) => {
+  //duration provient de room.turnDuration
+  const timeTaken = (timeAnswered - timeStarted ) / 1000;
+  if (timeTaken > duration) return 0;
+  const remainingTimePercentage = ((duration - timeTaken) / duration) * 100;
+  const score = (remainingTimePercentage / 100) * 100;
+  return Math.round(score);
+};
 
 export default {
   /**
@@ -176,13 +185,24 @@ export default {
       if (user.RoomId !== room.id) return res.status(403).send('Not in the room');
       if (req.body.answerIndex === undefined) return res.status(400).send('answerIndex is required');
       const currentQuestion = room.quizz.questions[room.turnCount];
+      const timeAnswered = Date.now();
+
+      const isCorrect = req.body.answerIndex === currentQuestion.answer;
+
+      let score = 0;
+      if ( isCorrect ) {
+        score = calculateScore(room.turnStartedAt, timeAnswered, room.turnDuration);
+      }
+
       await roomUserQuestionsAnswersService.create({
         roomId: room.id,
         userId: user.id,
         questionId: currentQuestion.id,
         answerIndex: req.body.answerIndex,
+        score: score,
       });
       updateRoom(req.params.id);
+      sendIsCorrect(isCorrect, user.id, score);
       res.sendStatus(204);
     } catch (err) {
       next(err);
