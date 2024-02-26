@@ -75,6 +75,7 @@
         </div>
       </div>
       <p>Answers allready recived: {{ currentQuestionAnswers.length }}/{{ room.players.length }}</p>
+      <p>Time left to answer: {{ countdown }}s</p>
     </template>
   </main>
 </template>
@@ -103,6 +104,7 @@ const { profile } = storeToRefs(authStore);
 const timer = ref(0);
 const turnDuration = ref(0);
 const roomCreatorId = ref('');
+const countdown = ref(0);
 
 const isShaking = ref(false);
 
