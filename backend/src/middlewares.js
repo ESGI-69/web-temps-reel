@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import userService from './services/user.js';
 import { users } from './socket/index.js';
+import roomService from './services/room.js';
 
 /**
  * User population middleware. This middleware will populate the user in the request object from the JWT token.
@@ -61,6 +62,35 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
+const isUserInRoom = (req, res, next) => {
+  if (!req.user) return res.status(401).send({
+    code: 'not_logged_in',
+    message: 'Not logged in',
+  });
+  if (!req.user.RoomId) return res.status(403).send({
+    code: 'not_in_room',
+    message: 'Not in room',
+  });
+  next();
+};
+
+const isUserRoomStarted = async (req, res, next) => {
+  if (!req.user) return res.status(401).send({
+    code: 'not_logged_in',
+    message: 'Not logged in',
+  });
+  if (!req.user.RoomId) return res.status(403).send({
+    code: 'not_in_room',
+    message: 'Not in room',
+  });
+  const room = await roomService.findById(req.user.RoomId);
+  if (!room.startedAt) return res.status(403).send({
+    code: 'room_not_started',
+    message: 'Room not started',
+  });
+  next();
+};
+
 /**
  * Check if the user is connected to a socket. If not, return 401.
  * @param {import('express').Request} req Express request object
@@ -78,8 +108,10 @@ const isConnectedToSocket = (req, res, next) => {
 };
 
 export {
-  populateUser,
-  isLogged,
   isAdmin,
   isConnectedToSocket,
+  isLogged,
+  isUserInRoom,
+  isUserRoomStarted,
+  populateUser,
 };

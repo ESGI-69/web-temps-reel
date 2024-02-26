@@ -57,16 +57,24 @@
     <template v-if="room.startedAt">
       <p>Game started at: {{ room.startedAt }}</p>
       <p>Question number: {{ room.turnCount + 1 }}</p>
-      <p>Question: {{ room.quizz.questions[room.turnCount].title }}</p>
-      <p>Answers:</p>
-      <ul>
-        <li
-          v-for="answer in room.quizz.questions[room.turnCount].options"
+      <p class="bold">
+        Question: {{ currentQuestion.title }}
+      </p>
+      <div class="answers">
+        <div
+          v-for="(answer, index) in currentQuestion.options"
           :key="answer"
+          class="answer"
+          :class="{
+            disabled: myAnswerIndex !== null,
+            selected: myAnswerIndex === currentQuestion.options.indexOf(answer)
+          }"
+          @click="onAnswerClick(index)"
         >
           {{ answer }}
-        </li>
-      </ul>
+        </div>
+      </div>
+      <p>Answers allready recived: {{ currentQuestionAnswers.length }}/{{ room.players.length }}</p>
     </template>
   </main>
 </template>
@@ -81,7 +89,7 @@ import { socket, connect } from '@/socket.js';
 import ChatWindow from '@/components/ChatWindow.vue';
 import ToasterNotif from '@/components/ToasterNotif.vue';
 import { useToasterStore } from '@/stores/toasterStore.js';
-import { onMounted, ref, onUnmounted } from 'vue';
+import { onMounted, ref, onUnmounted, computed } from 'vue';
 
 const toasterStore = useToasterStore();
 const roomStore = useRoomStore();
@@ -99,6 +107,15 @@ const roomCreatorId = ref('');
 const startGame = async () => {
   await roomStore.startGame(room.value.id);
 };
+
+const currentQuestion = computed(() => room.value.quizz.questions[room.value.turnCount]);
+
+const currentQuestionAnswers = computed(() => room.value.questionsAnswers.filter((questionAnswer) => questionAnswer.questionId === currentQuestion.value.id));
+
+const myAnswerIndex = computed(() => {
+  const answer = currentQuestionAnswers.value.find((questionAnswer) => questionAnswer.userId === profile.value.id);
+  return answer?.id || null;
+});
 
 onMounted(async () => {
   await connect();
@@ -150,4 +167,58 @@ socket.on('roomUpdated', (roomUpdated) => {
   }
   roomStore.updateRoomState(roomUpdated);
 });
+
+const onAnswerClick = async (answerIndex) => {
+  await roomStore.answerCurrentQuestion(room.value.id, answerIndex);
+};
 </script>
+
+<style>
+.bold {
+  font-weight: bold;
+}
+
+.answers {
+  display: flex;
+  gap: 10px;
+}
+
+.answer {
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  flex-grow: 1;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+
+  &:nth-child(1) {
+    background-color: #f1c40f;
+  }
+
+  &:nth-child(2) {
+    background-color: #e74c3c;
+  }
+
+  &:nth-child(3) {
+    background-color: #3498db;
+  }
+
+  &:hover {
+    box-shadow: 0 0 0 2px red;
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.selected {
+  box-shadow: 0 0 0 2px green;
+}
+</style>

@@ -3,6 +3,7 @@ import userService from '../services/user.js';
 import { updateRoom } from '../socket/index.js';
 import bcrypt from 'bcryptjs';
 import { roomTimers } from '../socket/index.js';
+import roomUserQuestionsAnswersService from '../services/roomUserQuestionsAnswers.js';
 
 export default {
   /**
@@ -159,6 +160,28 @@ export default {
       if (!room) return res.sendStatus(404);
       if (room.createdBy !== req.user.id) return res.sendStatus(403);
       await roomService.update({ id: req.params.id }, { startedAt: new Date(), turnStartedAt: new Date() });
+      updateRoom(req.params.id);
+      res.sendStatus(204);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  answer: async (req, res, next) => {
+    try {
+      const room = await roomService.findById(req.params.id);
+      if (!room) return res.sendStatus(404);
+      const user = await userService.findById(req.user.id);
+      if (!user) return res.sendStatus(404);
+      if (user.RoomId !== room.id) return res.status(403).send('Not in the room');
+      if (req.body.answerIndex === undefined) return res.status(400).send('answerIndex is required');
+      const currentQuestion = room.quizz.questions[room.turnCount];
+      await roomUserQuestionsAnswersService.create({
+        roomId: room.id,
+        userId: user.id,
+        questionId: currentQuestion.id,
+        answerIndex: req.body.answerIndex,
+      });
       updateRoom(req.params.id);
       res.sendStatus(204);
     } catch (err) {

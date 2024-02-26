@@ -1,4 +1,4 @@
-import { Question, Quizz, Room, User } from './../database/index.js';
+import { Question, Quizz, Room, RoomUserQuestionsAnswers, User } from './../database/index.js';
 
 export default {
 
@@ -36,6 +36,10 @@ export default {
         {
           as: 'players',
           model: User,
+        },
+        {
+          as: 'questionsAnswers',
+          model: RoomUserQuestionsAnswers,
         },
       ],
     });
