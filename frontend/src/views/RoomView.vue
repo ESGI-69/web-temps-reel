@@ -103,6 +103,7 @@ const { profile } = storeToRefs(authStore);
 const timer = ref(0);
 const turnDuration = ref(0);
 const roomCreatorId = ref('');
+const alreadyAnswered = ref(false);
 
 const isShaking = ref(false);
 
@@ -138,6 +139,10 @@ const onQuestionDurationChange = async () => {
     id: room.value.id,
     turnDuration: turnDuration.value,
   });
+};
+
+const sendAnswer = async (idAnswer, idQuestion) => {
+  socket.emit('checkAnswer', idAnswer, idQuestion);
 };
 
 onUnmounted(() => {
@@ -184,6 +189,15 @@ socket.on('wizz', () => {
 const onAnswerClick = async (answerIndex) => {
   await roomStore.answerCurrentQuestion(room.value.id, answerIndex);
 };
+
+socket.on('answerResult', (isCorrect) => {
+  alreadyAnswered.value = true;
+  if (isCorrect) {
+    toasterStore.addToast('Correct answer', 'success');
+  } else {
+    toasterStore.addToast('Wrong answer', 'error');
+  }
+});
 </script>
 
 <style>
