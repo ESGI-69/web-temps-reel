@@ -95,10 +95,8 @@ export default {
 
   changeTurnCount: async function (room) {
     const questions = await questionService.findAll({ quizzId: room.quizzId });
-    console.log('questions', questions);
     if (room.turnCount + 1 < questions.length) {
       const updatedRoom = await this.update({ id: room.id }, { turnCount: room.turnCount + 1, turnStartedAt: new Date() });
-      console.log('updatedRoom', updatedRoom);
       updateRoom(updatedRoom.id);
       this.startTimer(updatedRoom);
     } else {
