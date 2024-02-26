@@ -50,12 +50,20 @@ export class Timer {
 
   start(roomId) {
     let timer = 0;
-    const intervalId = setInterval(() => {
-      timer++;
-      io.to(roomId).emit('timer', timer);
-    }, 1000); // Update every second
+    roomService.findById(roomId).then((room) => {
+      let timeRunningOutFlag = false; //on a le flag pour éviter plusieurs emit
+      const intervalId = setInterval(() => {
+        timer++;
+        io.to(roomId).emit('timer', timer);
+        //quand il reste 3 secondes au timer, on préviens les users :)
+        if (room.turnDuration - timer <= 3 && !timeRunningOutFlag) {
+          io.to(roomId).emit('timeRunningOut');
+          timeRunningOutFlag = true;
+        }
+      }, 1000); // Update every second
 
-    this.timers.set(roomId, { intervalId, timer });
+      this.timers.set(roomId, { intervalId, timer });
+    });
   }
 
   stop(roomId) {
@@ -101,5 +109,15 @@ export default () => {
 export const sendMessageToRoom = async (room, message) => {
   if (!room || !message) return; // if the user is not in a game, do nothing
   //emit to the room the message
-  await io.to(room).emit('messageRoom', message);
+  // if message contains "/wizz", emit to the room the wizz
+  if (message.message === '/wizz') {
+    await io.to(room).emit('wizz', message);
+  }
+
+  if (message.message === '/love') {
+    message.message = '❤️';
+    await io.to(room).emit('love', message);
+  } else {
+    await io.to(room).emit('messageRoom', message);
+  }
 };

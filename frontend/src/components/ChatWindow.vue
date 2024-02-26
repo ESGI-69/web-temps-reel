@@ -1,5 +1,11 @@
 <template>
   <div class="chat-window">
+    <div
+      v-show="isEmojiDisplayed"
+      id="emojiReaction"
+    >
+      ❤️
+    </div>
     <div class="chat-messages">
       <div
         v-for="message in chatStore.chatMessages"
@@ -29,6 +35,7 @@ import { socket } from '@/socket.js';
 
 const chatStore = useChatStore();
 const newMessage = ref('');
+const isEmojiDisplayed = ref(false);
 
 const send = () => {
   if (newMessage.value.trim()) {
@@ -46,7 +53,21 @@ const messageRoomHandler = (message) => {
   chatStore.addMessage(message);
 };
 
+const popEmoji = () => {
+  isEmojiDisplayed.value = true;
+  setTimeout(() => {
+    isEmojiDisplayed.value = false;
+  }, 2000);
+
+};
+
+const emojiRoomHandler = (message) => {
+  chatStore.addMessage(message);
+  popEmoji();
+};
+
 socket.on('messageRoom', messageRoomHandler);
+socket.on('love', emojiRoomHandler);
 </script>
 
 <style scoped>
@@ -107,5 +128,22 @@ button {
 
 button:hover {
   background-color: #0056b3;
+}
+
+#emojiReaction{
+  position: absolute;
+  font-size: 90px;
+  animation: float 2s forwards;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
 }
 </style>
