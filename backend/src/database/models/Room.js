@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import { Quizz, User } from '../index.js';
+import { Quizz, RoomUserQuestionsAnswers, User } from '../index.js';
 import bcrypt from 'bcryptjs';
 
 /**
@@ -12,6 +12,7 @@ export default (connection) => {
       this.belongsTo(Quizz, { foreignKey: 'quizzId', as: 'quizz' });
       this.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
       this.hasMany(User, { as: 'players' });
+      this.hasMany(RoomUserQuestionsAnswers, { as: 'questionsAnswers', foreignKey: 'roomId' });
     }
   }
 

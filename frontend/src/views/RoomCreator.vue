@@ -46,6 +46,7 @@
         id="roomUserLimits"
         v-model="room.usersLimit"
         type="number"
+        min="2"
       >
 
       <button
@@ -78,7 +79,7 @@ const room = reactive({
   quizzId: '',
   turnDuration: 30,
   password: null,
-  usersLimit: null,
+  usersLimit: 2,
 });
 
 const onSubmit = async () => {

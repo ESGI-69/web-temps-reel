@@ -106,5 +106,17 @@ export const useRoomStore = defineStore({
         this.isPatchRoomLoading = false;
       }
     },
+
+    async answerCurrentQuestion(id, answerIndex) {
+      this.isAnwserQuestionLoading = true;
+      try {
+        await api.post(`/room/${id}/answer`, { answerIndex });
+      } catch (error) {
+        console.error(error);
+        throw error;
+      } finally {
+        this.isAnwserQuestionLoading = false;
+      }
+    },
   },
 });

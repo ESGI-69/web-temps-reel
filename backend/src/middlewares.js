@@ -61,6 +61,34 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
+const isUserInRoom = (req, res, next) => {
+  if (!req.user) return res.status(401).send({
+    code: 'not_logged_in',
+    message: 'Not logged in',
+  });
+  if (!req.user.RoomId) return res.status(403).send({
+    code: 'not_in_room',
+    message: 'Not in room',
+  });
+  next();
+};
+
+const isUserRoomStarted = (req, res, next) => {
+  if (!req.user) return res.status(401).send({
+    code: 'not_logged_in',
+    message: 'Not logged in',
+  });
+  if (!req.user.RoomId) return res.status(403).send({
+    code: 'not_in_room',
+    message: 'Not in room',
+  });
+  if (!req.user.Room.startedAt) return res.status(403).send({
+    code: 'room_not_started',
+    message: 'Room not started',
+  });
+  next();
+};
+
 /**
  * Check if the user is connected to a socket. If not, return 401.
  * @param {import('express').Request} req Express request object
@@ -78,8 +106,10 @@ const isConnectedToSocket = (req, res, next) => {
 };
 
 export {
-  populateUser,
-  isLogged,
   isAdmin,
   isConnectedToSocket,
+  isLogged,
+  isUserInRoom,
+  isUserRoomStarted,
+  populateUser,
 };
