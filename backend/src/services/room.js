@@ -97,11 +97,10 @@ export default {
     const questions = await questionService.findAll({ quizzId: room.quizzId });
     if (room.turnCount + 1 < questions.length) {
       const updatedRoom = await this.update({ id: room.id }, { turnCount: room.turnCount + 1, turnStartedAt: new Date() });
-      updateRoom(updatedRoom.id);
       this.startTimer(updatedRoom);
     } else {
-      this.update({ id: room.id }, { turnStartedAt: null });
-      updateRoom(room.id);
+      await this.update({ id: room.id }, { turnStartedAt: null, endedAt: new Date() });
     }
+    updateRoom(room.id);
   },
 };
